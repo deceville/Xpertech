@@ -56,6 +56,14 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
                 getFragmentManager().beginTransaction().replace(R.id.content_main, new PackagesFragment()).commit();
             }
         });
+
+        Button btn_manual = (Button) view.findViewById(R.id.btn_manual);
+        btn_manual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).commit();
+            }
+        });
     }
 
     /**
