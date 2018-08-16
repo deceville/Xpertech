@@ -1,0 +1,13 @@
+1.)	Turn on your TV
+2.)	Press and hold the Simple Set button until LED blinks 2x
+3.)	While pointing the remote control to your TV, press and hold the number button which corresponds to your TV brand until the TV turns off by itself
+        1 = Samsung	6 = Sharp
+        2 = LG	7 = Philips
+        3 = Sony	8 = JVC
+        4 = Panasonic	9 = Hitachi
+        5 = Toshiba	0 = Haier
+4.)	Turn on your TV using the TV remote control
+5.)	Once turned on, perform a test using your remote control to your TV by
+6.)	pressing the Volume Up and Volume Down
+7.)	pressing the Mute button
+8.)	Test the Channel +/- key on the Remote control

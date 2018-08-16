@@ -1,0 +1,16 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.company.xpertech.xpertech.Nav_Fragment.ManualFragment"
+    android:id="@+id/content_manual">
+
+    <ListView
+        android:layout_below="@+id/search_trouble"
+        android:layout_marginTop="@dimen/content_padding"
+        android:id="@+id/listview_troubleshoot"
+        android:layout_width="match_parent"
+        android:padding="@dimen/item_padding"
+        android:layout_height="match_parent"></ListView>
+
+</FrameLayout>

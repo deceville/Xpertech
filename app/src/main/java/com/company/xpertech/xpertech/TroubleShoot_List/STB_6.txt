@@ -1,0 +1,5 @@
+1.)	Turn the STB off and locate where the smart card is inserted
+2.)	Gently take out the smart card and check for any physical defects
+3.)	You may try to wipe the gold chip with a soft, dry, non-abrasive cloth to clear any dirt build up
+4.)	Insert the smart card back to the card slot the same way how it was removed
+5.)	Make sure that the smart card is properly inserted and seated securely

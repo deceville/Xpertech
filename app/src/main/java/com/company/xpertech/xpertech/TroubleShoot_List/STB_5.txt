@@ -1,0 +1,7 @@
+1.)	Check if coaxial cable (RG6) is firmly connected and secured
+2.)	Press the MENU button on your remote control then navigate to SETTINGS
+3.)	Key in default PIN as 0000 or 9998
+4.)	Navigate to the following options SYSTEM SETUP > INSTALLATION SETUP > SATELLITE SETUP > LNB POWERING
+5.)	Toggle ON/OFF using the LEFT and RIGHT buttons on the remote
+6.)	for the Primary STB - must be set to ON
+7.)	for 2nd/3rd STB - must be set to OFF

@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">Xpertech</string>
+    <string name="title_activity_main">Home</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="intro_title">Welcome to Xpertech!</string>
+    <string name="intro_scan_qr">Please scan the QR Code from your cable box to enter.</string>
+    <string name="intro_enter_code">Enter your account number</string>
+    <string name="intro_not_qr">Or enter your account number</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_troubleshoot">Troubleshoot</string>
+    <string name="menu_manual">User Manual</string>
+    <string name="menu_self_install">Self-Install Guide</string>
+    <string name="menu_remote">Remote Control Assistant</string>
+    <string name="menu_package">Packages and Channel Lineup</string>
+
+    <string name="btn_enter_code">PROCEED</string>
+    <string name="btn_cancel">CANCEL</string>
+
+    //Troubleshoot procedure for first box
+
+    //Troubleshoot #1
+    <string name="troubleshoot_title_01">Set Top Box (STB) Configuration</string>
+    <string name="troubleshoot_01_01">On the Remote, press and hold OK button and Power button simultaneously until LED blinks 2x</string>
+    <string name="troubleshoot_01_02">Press 9-8-2 on the remote to unlock it for RCU programming, LED should blink 4x</string>
+    <string name="troubleshoot_01_03">Press and hold the OK button and Power button again simultaneously for 3-5 seconds until the LED blinks 2x</string>
+    <string name="troubleshoot_01_04">Press the assigned code 4998/2319 to be controlled</string>
+    <string name="troubleshoot_01_05">Remote control LED will blink 2x once correct code is entered</string>
+    <string name="troubleshoot_01_06">Press and hold the OK button and Power button simultaneously for 3-5 seconds until the LED blinks 2x</string>
+    <string name="troubleshoot_01_07">Press 9-8-2 on the remote to lock it for RCU programming, LED should blink 2x</string>
+
+    <string name="fragment_intro_instruction">Please follow the steps provided on the screen and answer the questions.</string>
+
+    <string name="accept">Accept</string>
+    <string name="eula_string">
+        End-User License Agreement
+
+        \n\nPlease read this End-User License Agreement ("Agreement") carefully before clicking the "I Agree" button or downloading.
+        By clicking the "I Agree" radio button then ‘Continue’, downloading or using the Application, you are agreeing to be bound by the terms and conditions of this Agreement.
+        If you do not agree to the terms of this Agreement, do not click on the "I Agree" radio button and do not download or use the Application.
+
+        \n\nLicense
+        \n\nXpertech grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the Application solely for your personal, non-commercial purposes strictly in accordance with the terms of this Agreement.
+
+        \n\nRestrictions
+        \n\nYou agree not to, and you will not permit others to:
+        \n\na) license, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the Application or make the Application available to any third party.
+
+        \n\nModifications to Application
+        \n\nXpertech reserves the right to modify, suspend or discontinue, temporarily or permanently, the Application or any service to which it connects, with or without notice and without liability to you.
+
+        \n\nTerm and Termination
+        \n\nThis Agreement shall remain in effect until terminated by you or Xpertech, its admin or its developers.
+        Xpertech may, in its sole discretion, at any time and for any or no reason, suspend or terminate this Agreement with or without prior notice.
+        This Agreement will terminate immediately, without prior notice from Xpertech, in the event that you fail to comply with any provision of this Agreement. You may also terminate this Agreement by deleting the Application and all copies thereof from your mobile device or from your desktop.
+        Upon termination of this Agreement, you shall cease all use of the Application and delete all copies of the Application from your mobile device or from your desktop.
+
+        \n\nSeverability
+        \n\nIf any provision of this Agreement is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remaining provisions will continue in full force and effect.
+
+        \n\nAmendments to this Agreement
+        \n\nXpertech reserves the right, at its sole discretion, to modify or replace this Agreement at any time. If a revision is material we will provide at least 60 days’ notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
+
+        \n\nContact Information
+        \n\nIf you have any questions about this Agreement, please contact us.
+
+            \n\nEmail: josh.sanchez1012spotify@gmail.com
+            \n\nPhone: (+63) 928 520-0630
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

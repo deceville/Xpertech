@@ -1,0 +1,7 @@
+1.) On the Remote, press and hold OK button and Power button simultaneously until LED blinks 2x
+2.) Press 9-8-2 on the remote to unlock it for RCU programming, LED should blink 4x
+3.)	Press and hold the OK button and Power button again simultaneously for 3-5 seconds until the LED blinks 2x
+4.)	Press the assigned code 4998/2319 to be controlled
+5.)	Remote control LED will blink 2x once correct code is entered
+6.)	Press and hold the OK button and Power button simultaneously for 3-5 seconds until the LED blinks 2x
+7.)	Press 9-8-2 on the remote to lock it for RCU programming, LED should blink 2x

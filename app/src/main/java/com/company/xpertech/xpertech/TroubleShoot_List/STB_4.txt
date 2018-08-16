@@ -1,0 +1,6 @@
+1.)	Make sure that your TV is not on standby mode
+2.)	Check the connections between the STB and TV if firmly and properly connected
+3.)	On your TV, select the correct Audio/Video input or source (example: AV1, AV2, HDM1 HDM2, etc.)
+4.)	Power on the l STB
+5.)	Check TV and STB volume functions
+6.)	If issue persists, perform hard reset by unplugging the STB from the wall socket and plug it back in after 5 seconds
