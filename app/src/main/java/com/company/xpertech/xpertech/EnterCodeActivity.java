@@ -29,7 +29,7 @@ public class EnterCodeActivity extends AppCompatActivity {
         btn_enter_accNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(EnterCodeActivity.this, DeviceSummaryActivity.class));
+                startActivity(new Intent(EnterCodeActivity.this, MainActivity.class));
             }
         });
 
