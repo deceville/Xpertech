@@ -78,7 +78,7 @@ public class TroubleeshootItemFragment extends Fragment {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootConfirmationFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootConfirmationFragment()).addToBackStack("tag").commit();
             }
         });
     }

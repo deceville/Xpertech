@@ -1,12 +1,8 @@
 package com.company.xpertech.xpertech;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +24,7 @@ import java.io.IOException;
 
 public class SignUpActivity extends AppCompatActivity{
 
-    Button btn_entercode;
+    TextView qr_result;
     SurfaceView cameraPreview;
 
     BarcodeDetector barcodeDetector;
@@ -47,14 +43,15 @@ public class SignUpActivity extends AppCompatActivity{
         setContentView(R.layout.activity_scan_qr);
 
         //Open Enter Code Activity
-        btn_entercode = (Button) findViewById(R.id.btn_entercode);
+        qr_result = (TextView) findViewById(R.id.qr_result);
 
-        btn_entercode.setOnClickListener(new View.OnClickListener() {
+        /*btn_entercode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(SignUpActivity.this, EnterCodeActivity.class));
             }
-        });
+        });*/
 
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
@@ -110,13 +107,19 @@ public class SignUpActivity extends AppCompatActivity{
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
+                String result = qrcodes.valueAt(0).displayValue;
                 if(qrcodes.size() != 0) {
-                    String result = qrcodes.valueAt(0).displayValue;
 
-                    dialogHandler(result);
-                }//else {
-                 //   startActivity(new Intent(SignUpActivity.this, DeviceSummaryActivity.class));
-                //}
+                    if(result.equals("Xpertech")){
+                        finish();
+                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                    }
+                    else{
+                        qr_result.setText("Invalid QR code. Please try again.");
+                        //   startActivity(new Intent(SignUpActivity.this, DeviceSummaryActivity.class));
+                    }
+                    //dialogHandler(result);
+                }
             }
         });
 
@@ -133,7 +136,7 @@ public class SignUpActivity extends AppCompatActivity{
 
         qr_details = (TextView) d.findViewById(R.id.qr_details);
 
-        qr_details.setText(result);
+        qr_details.setText(shareResult);
 
         //Back Button
         Button btn_back = (Button) d.findViewById(R.id.btn_back);

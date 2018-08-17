@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
         btn_troubleshoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
             }
         });
 
@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
         btn_package.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new PackagesFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new PackagesFragment()).addToBackStack("tag").commit();
             }
         });
 
@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
         btn_manual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).addToBackStack("tag").commit();
             }
         });
     }

@@ -7,61 +7,86 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="3dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200px"
-            android:weightSum="2">
+            android:layout_height="160dp"
+            android:weightSum="1">
 
             <Button
                 android:id="@+id/btn_troubleshoot"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_margin="3dp"
+                android:padding="@dimen/item_padding"
+                android:background="@android:color/holo_blue_light"
                 android:text="@string/menu_troubleshoot"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/btn_selfinstall"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_margin="3dp"
+                android:padding="@dimen/item_padding"
+                android:background="@android:color/holo_orange_light"
                 android:text="@string/menu_self_install"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200px"
-            android:weightSum="2">
             <Button
                 android:id="@+id/btn_manual"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_margin="3dp"
+                android:padding="@dimen/item_padding"
+                android:background="@android:color/holo_red_light"
                 android:text="@string/menu_manual"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/btn_remote"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_margin="3dp"
+                android:padding="@dimen/item_padding"
+                android:background="@android:color/holo_green_light"
                 android:text="@string/menu_remote"/>
-        </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200px"
-            android:weightSum="2">
             <Button
                 android:id="@+id/btn_package"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_margin="3dp"
+                android:padding="@dimen/item_padding"
+                android:background="@android:color/holo_orange_dark"
                 android:text="@string/menu_package"/>
 
         </LinearLayout>
+
     </LinearLayout>
 
 

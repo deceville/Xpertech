@@ -53,7 +53,7 @@ public class PackagesRecyclerView extends RecyclerView.Adapter<PackagesRecyclerV
                 bundle.putString("package",   packages);
                 ChannelFragment channelf = new ChannelFragment();
                 channelf.setArguments(bundle);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, channelf).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, channelf).addToBackStack("tag").commit();
 
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the

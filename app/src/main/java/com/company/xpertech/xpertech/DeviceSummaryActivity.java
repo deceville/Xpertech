@@ -30,6 +30,7 @@ public class DeviceSummaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DeviceSummaryActivity.this, MainActivity.class));
+                finish();
             }
         });
     }

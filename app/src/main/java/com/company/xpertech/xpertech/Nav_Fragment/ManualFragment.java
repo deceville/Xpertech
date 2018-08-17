@@ -105,7 +105,7 @@ public class ManualFragment extends Fragment {
                 Sub_Manual_Fragment smf = new Sub_Manual_Fragment();
                 smf.setArguments(bundle);
 
-                ft.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, smf).commit();
+                ft.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, smf).addToBackStack("tag").commit();
             }
         });
 

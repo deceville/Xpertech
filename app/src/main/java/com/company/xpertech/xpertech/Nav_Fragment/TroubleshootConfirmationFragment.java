@@ -57,10 +57,11 @@ public class TroubleshootConfirmationFragment extends Fragment {
                 dialog_text.setText("Good job! You have solved the problem.");
 
                 Button btn_back = (Button) d.findViewById(R.id.btn_back);
+                btn_back.setText("Back to Main Menu");
                 btn_back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).commit();
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new HomeFragment()).addToBackStack("tag").commit();
                         d.dismiss();
                     }
                 });

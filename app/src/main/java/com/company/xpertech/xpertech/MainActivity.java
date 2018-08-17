@@ -111,16 +111,16 @@ public class MainActivity extends AppCompatActivity
 
         switch(item.getItemId()){
             case R.id.nav_troubleshoot:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_userManual:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new HomeFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new HomeFragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_package:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new PackagesFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new PackagesFragment()).addToBackStack("tag").commit();
                 break;
         }
 

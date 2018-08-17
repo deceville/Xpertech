@@ -44,13 +44,13 @@
             android:layout_height="0dp"
             android:layout_weight=".85"/>
 
-        <Button
-            android:id="@+id/btn_entercode"
+        <TextView
+            android:id="@+id/qr_result"
             android:layout_marginTop="@dimen/fab_margin"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".15"
-            android:text="@string/intro_not_qr"/>
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
