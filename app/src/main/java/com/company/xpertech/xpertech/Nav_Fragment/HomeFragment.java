@@ -57,8 +57,8 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
             }
         });
 
-        Button btn_manual = (Button) view.findViewById(R.id.btn_manual);
-        btn_manual.setOnClickListener(new View.OnClickListener() {
+        Button btn_selfinstall = (Button) view.findViewById(R.id.btn_selfinstall);
+        btn_selfinstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).addToBackStack("tag").commit();
@@ -99,6 +99,7 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle("Home");
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 

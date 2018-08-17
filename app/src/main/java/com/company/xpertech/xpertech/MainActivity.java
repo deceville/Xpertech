@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_troubleshoot:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
                 break;
-            case R.id.nav_userManual:
+            case R.id.nav_selfInstall:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_home:

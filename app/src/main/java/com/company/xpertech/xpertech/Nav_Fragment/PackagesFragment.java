@@ -72,6 +72,7 @@ public class PackagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle("Packages and Channel Lineup");
 
         final View view = inflater.inflate(R.layout.fragment_packages_list, container, false);
         packageTitle = new ArrayList<String>();

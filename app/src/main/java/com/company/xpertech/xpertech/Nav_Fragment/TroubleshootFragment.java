@@ -65,6 +65,8 @@ public class TroubleshootFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        getActivity().setTitle("Troubleshoot");
+
         final View view = inflater.inflate(R.layout.fragment_troubleshoot_list, container, false);
 
         troubleshootTitle = new ArrayList<String>();
