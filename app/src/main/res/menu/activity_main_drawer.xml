@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_home_black_24dp"
             android:title="Home" />
         <item
             android:id="@+id/nav_troubleshoot"
@@ -12,19 +12,19 @@
             android:title="@string/menu_troubleshoot" />
         <item
             android:id="@+id/nav_selfInstall"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_assignment"
             android:title="@string/menu_self_install" />
         <item
             android:id="@+id/nav_userManual"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_tv_black_24dp"
             android:title="@string/menu_manual" />
         <item
             android:id="@+id/nav_remoteControl"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_speaker_black_24dp"
             android:title="@string/menu_remote" />
         <item
             android:id="@+id/nav_package"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_local_mall"
             android:title="@string/menu_package" />
     </group>
 
