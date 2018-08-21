@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.company.xpertech.xpertech.Nav_Fragment.PackagesFragment"
+    tools:context="com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment.PackagesFragment"
     android:layout_marginBottom="@dimen/item_padding">
 
     <LinearLayout

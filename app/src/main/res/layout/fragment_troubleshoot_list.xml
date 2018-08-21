@@ -10,5 +10,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.company.xpertech.xpertech.Nav_Fragment.TroubleshootFragment"
+    tools:context="com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootFragment"
     tools:listitem="@layout/fragment_troubleshoot" />

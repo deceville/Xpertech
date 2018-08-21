@@ -1,38 +1,33 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/content_padding"
-        tools:context="com.company.xpertech.xpertech.Nav_Fragment.TroubleeshootItemFragment">
-
-        <LinearLayout
+        android:orientation="vertical"
+        android:padding="30dp">
+        <TextView
+            android:id="@+id/item_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/gif_imageView"
-                android:layout_width="300dp"
-                android:layout_height="150dp"
-                android:background="@drawable/greenled"/>
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/item_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textSize="18sp" />
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/greenled"
+            android:layout_gravity="center_vertical"/>
 
-            <Button
-                android:id="@+id/btn_done"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DONE"/>
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DONE"
+            android:layout_gravity="bottom"/>
 
+    </LinearLayout>
 
-    </FrameLayout>
-</ScrollView>
+<!--</ScrollView>-->

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.company.xpertech.xpertech.R;
 
@@ -67,60 +66,6 @@ public class Sub_Manual_Fragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Bundle bundle = getArguments();
-        position = bundle.getInt("position");
-        TextView txtTitle = (TextView) view.findViewById(R.id.manual_title);
-        TextView txtContent = (TextView) view.findViewById((R.id.manual_content));
-
-        switch(position){
-            case 0:
-                txtTitle.setText("Unpacking");
-                txtContent.setText(
-                        "\tYour service package selected determines the range of capabilities of your cable box. " +
-                                "But for every service, the self-install kit should be inclusive of the following:\n" +
-                                "1.) Set Top Box (STB)\n" +
-                                "2.) Infrared remote control \n" +
-                                "3.) Battery\n" +
-                                "4.) Power Adapter\n" +
-                                "5.) Audio or Video Cable\n" +
-                                "6.) Video Graphics Array (VGA) Cable\n" +
-                                "7.) Coax Cable\n" +
-                                "8.) User Guide"
-                );
-                break;
-            case 1:
-                txtTitle.setText("Plugging In");
-                txtContent.setText(
-                        "\tThis Self-install guide are for those who wanted to set the installation on their own, " +
-                                "assuming that the subscribers' outside connections are all set. \n" +
-                                "1.) Screw Coax Cable from wall outlet to the back of the cable box. \n" +
-                                "2.) If box is HD capable, connect the VGA cable from the VGA slot at the back of the box to the respective VGA outlet on your TV. " +
-                                "If the box is 'not' HD capable, connect the other coaxial cable from the cable box to your TV.\n" +
-                                "3.) Connect the power cable into the back of the Set Top Box to the power outlet."
-                );
-                break;
-            case 2:
-                txtTitle.setText("Powering up the box ");
-                txtContent.setText(
-                        "1.)  When all connections said are all set, turn ON the power on your cable box by pressing the Power Button " +
-                                "in the front end of your box or Press the Power Button on your cable box Remote Control \n" +
-                                "2.) If you connected your cable box to your TV with coaxial cables, Turn your TV Channel to Channel 2 to see if you got picture. " +
-                                "If not, turn your TV to Channels 3 or 4 until you got picture. " +
-                                "If you connected HDMI cable from the box to your TV, check the Channel sourcing of your TV and make sure it is tuned in to " +
-                                "the appropriate HDMI mode where you connected your HDMI cable at. Either HDMI 1 or HDMI 2, etc\n"
-                );
-                break;
-            case 3:
-                txtTitle.setText("Support and Activating Service");
-                txtContent.setText(
-                        "1.)  If you are able to see pictures already, congratulations! You have successfully set your cable service up! If you are still having issues, visit our website at \n" +
-                                "www.newbacolodcabletv.com or call us at (034) 445-8514 or message us directly on Facebook at New Bacolod CableTV.\n" +
-                                "2.) If your service is not yet activated, call our direct hotline at (034) 445-8514."
-                );
-                break;
-
-        }
     }
 
     @Override

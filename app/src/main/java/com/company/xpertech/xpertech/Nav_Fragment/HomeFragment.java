@@ -10,8 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.company.xpertech.xpertech.Method.Troubleshoot;
+import com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment.PackagesFragment;
+import com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment.SelfInstallFragment;
+import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootFragment;
 import com.company.xpertech.xpertech.R;
-import com.company.xpertech.xpertech.Troubleshoot;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +64,7 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
         btn_selfinstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new ManualFragment()).addToBackStack("tag").commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new SelfInstallFragment()).addToBackStack("tag").commit();
             }
         });
     }

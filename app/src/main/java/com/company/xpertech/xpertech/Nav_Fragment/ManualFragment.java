@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.company.xpertech.xpertech.R;
@@ -83,31 +81,7 @@ public class ManualFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_manual, container, false);
 
-        String[] manualItems = {"Unpacking", "Plugging In", "Powering up the Box", "Support and Activating Service"};
 
-        listView = (ListView) view.findViewById(R.id.listview_manual);
-
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                manualItems
-        );
-
-        listView.setAdapter(listViewAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ft = (FragmentActivity) ctx;
-                Bundle bundle = new Bundle();
-                bundle.putInt("position",position);
-                Sub_Manual_Fragment smf = new Sub_Manual_Fragment();
-                smf.setArguments(bundle);
-
-                ft.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, smf).addToBackStack("tag").commit();
-            }
-        });
 
         return view;
     }
@@ -122,7 +96,7 @@ public class ManualFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ctx = context;
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

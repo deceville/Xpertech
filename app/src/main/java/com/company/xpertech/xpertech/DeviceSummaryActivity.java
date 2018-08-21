@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.company.xpertech.xpertech.Main.MainActivity;
+import com.company.xpertech.xpertech.Main.SignUpActivity;
+
 public class DeviceSummaryActivity extends AppCompatActivity {
 
     @Override
