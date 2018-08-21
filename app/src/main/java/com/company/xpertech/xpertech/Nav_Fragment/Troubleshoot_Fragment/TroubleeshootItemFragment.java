@@ -97,9 +97,9 @@ public class TroubleeshootItemFragment extends Fragment {
                 d.setContentView(R.layout.fragment_troubleshoot_dialog);
                 d.show();
                 final TextView dialog_text = (TextView) d.findViewById(R.id.dialog_text);
-                dialog_text.setText("Where you able to perform te process?");
+                dialog_text.setText("Were you able to perform the process?");
                 if (cnt == troubleshootArrayList.size()-1)
-                    dialog_text.setText("Was the problem fixed?s");
+                    dialog_text.setText("Was the problem fixed?");
 
                 final Button btn_back = (Button) d.findViewById(R.id.btn_back);
                 btn_back.setText("Yes");
