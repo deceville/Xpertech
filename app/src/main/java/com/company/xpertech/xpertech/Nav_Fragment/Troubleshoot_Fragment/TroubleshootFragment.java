@@ -6,9 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.company.xpertech.xpertech.R;
 import com.company.xpertech.xpertech.Method.Troubleshoot;
@@ -28,6 +33,7 @@ public class TroubleshootFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    MyTroubleshootRecyclerViewAdapter mAdapter;
 
     ArrayList <String> troubleshootTitle;
     ArrayList <Troubleshoot> troubleshootList;
@@ -61,14 +67,7 @@ public class TroubleshootFragment extends Fragment {
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        getActivity().setTitle("Troubleshoot");
-
-        final View view = inflater.inflate(R.layout.fragment_troubleshoot_list, container, false);
-
+    public void creatList(){
         troubleshootTitle = new ArrayList<String>();
         troubleshootList = new ArrayList<Troubleshoot>();
 
@@ -79,36 +78,63 @@ public class TroubleshootFragment extends Fragment {
         troubleshootTitle.add("My TV has No Audio and/or Video Output");
         troubleshootTitle.add("My TV is Showing \"Technical Problem\" Error/Pixilated Pictures/ON and OFF Programming");
         troubleshootTitle.add("My TV Screen is Showing an Error Code - E1 / E2 / E11 / E4 / E6 / E14");
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        getActivity().setTitle("Troubleshoot");
+
+        final View view = inflater.inflate(R.layout.fragment_troubleshoot_list, container, false);
+
+        creatList();
 
         for (int i = 0; i < troubleshootTitle.size(); i++){
             Troubleshoot trbl = new Troubleshoot(troubleshootTitle.get(i));
             troubleshootList.add(trbl);
         }
 
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyTroubleshootRecyclerViewAdapter(troubleshootList, mListener));
+        Context context = view.getContext();
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        mAdapter = new MyTroubleshootRecyclerViewAdapter(troubleshootList,mListener);
+        recyclerView.setAdapter(mAdapter);
 
+        EditText editText = (EditText) view.findViewById(R.id.search_text);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-//        view.setOnClickListener((new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        int itemPosition = recyclerView.getChildAdapterPosition(view);
-//                        String item = troubleshootTitle.get(itemPosition);
-//                        Toast.makeText(getContext(), item, Toast.LENGTH_SHORT).show();
-//                    }
-//                }));
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
+
 
         return view;
+    }
+
+    public void filter(String text){
+        ArrayList<Troubleshoot> filtered = new ArrayList<>();
+        for(Troubleshoot item: troubleshootList){
+            if(item.getTitle().toLowerCase().contains(text.toLowerCase())){
+                filtered.add(item);
+            }
+        }
+
+        mAdapter.filterList(filtered);
     }
 
 

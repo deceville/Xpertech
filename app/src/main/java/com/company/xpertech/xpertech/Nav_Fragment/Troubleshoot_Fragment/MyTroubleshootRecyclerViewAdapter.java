@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.company.xpertech.xpertech.R;
 import com.company.xpertech.xpertech.Method.Troubleshoot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -26,7 +27,7 @@ import pl.droidsonroids.gif.GifImageView;
 public class MyTroubleshootRecyclerViewAdapter extends RecyclerView.Adapter<MyTroubleshootRecyclerViewAdapter.ViewHolder>
         implements TroubleeshootItemFragment.OnFragmentInteractionListener {
 
-    private final List<Troubleshoot> mValues;
+    private List<Troubleshoot> mValues;
     private final TroubleshootFragment.OnListFragmentInteractionListener mListener;
 
     Context ctx;
@@ -171,5 +172,11 @@ public class MyTroubleshootRecyclerViewAdapter extends RecyclerView.Adapter<MyTr
                         "5.)\tMake sure that the smart card is properly inserted and seated securely\n";
         }
         return "";
+    }
+
+    public void filterList(ArrayList<Troubleshoot> list){
+        mValues = (List)list;
+        notifyDataSetChanged();
+
     }
 }
