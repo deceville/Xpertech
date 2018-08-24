@@ -1,12 +1,17 @@
 package com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,8 @@ import android.widget.TextView;
 import com.company.xpertech.xpertech.R;
 
 import java.util.ArrayList;
+
+import static android.Manifest.permission.CALL_PHONE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -129,7 +136,18 @@ public class TroubleeshootItemFragment extends Fragment {
 
                             @Override
                             public void onClick(View v) {
+                                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                callIntent.setData(Uri.parse("tel:4458514"));
+
+                                if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    startActivity(callIntent);
+                                } else {
+                                    requestPermissions(new String[]{CALL_PHONE}, 1);
+                                }
+
                                 d.dismiss();
+                                TroubleshootFragment tf = new TroubleshootFragment();
+                                actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                             }
                         });
                         btn_call.setOnClickListener(new View.OnClickListener(){

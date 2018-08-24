@@ -19,9 +19,7 @@ import com.company.xpertech.xpertech.Nav_Fragment.HomeFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment.SelfInstallFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment.Sub_Install_Fragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.IntroFragment;
-import com.company.xpertech.xpertech.Nav_Fragment.ManualFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment.PackagesFragment;
-import com.company.xpertech.xpertech.Nav_Fragment.Sub_Manual_Fragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleeshootItemFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootConfirmationFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootFragment;
@@ -32,14 +30,12 @@ import com.company.xpertech.xpertech.Method.Troubleshoot;
 public class MainActivity extends AppCompatActivity
         implements TroubleshootFragment.OnListFragmentInteractionListener,
         TroubleeshootItemFragment.OnFragmentInteractionListener,
-        ManualFragment.OnFragmentInteractionListener,
         HomeFragment.OnFragmentInteractionListener,
         IntroFragment.OnFragmentInteractionListener,
         TroubleshootConfirmationFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener,
         PackagesFragment.OnListFragmentInteractionListener,
         ChannelFragment.OnFragmentInteractionListener,
-        Sub_Manual_Fragment.OnFragmentInteractionListener ,
         SelfInstallFragment.OnFragmentInteractionListener,
         Sub_Install_Fragment.OnFragmentInteractionListener{
 
