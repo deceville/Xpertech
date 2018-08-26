@@ -167,6 +167,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_userManual:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new ManualListFragment()).addToBackStack("tag").commit();
                 break;
+            case R.id.nav_share:
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FeedbackFragment()).addToBackStack("tag").commit();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

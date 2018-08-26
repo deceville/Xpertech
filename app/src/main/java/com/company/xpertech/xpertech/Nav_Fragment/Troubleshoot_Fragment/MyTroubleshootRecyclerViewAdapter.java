@@ -69,7 +69,7 @@ public class MyTroubleshootRecyclerViewAdapter extends RecyclerView.Adapter<MyTr
                 bundle.putString("data", steps);
                 IntroFragment introf = new IntroFragment();
                 introf.setArguments(bundle);
-                actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, introf).addToBackStack("tag").commit();
+                actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, introf).commit();
 
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the

@@ -133,12 +133,17 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                //String result = qrcodes.valueAt(0).displayValue;
+                String result = qrcodes.valueAt(0).displayValue;
 
                 if (qrcodes.size() != 0) {
-                    String method = "login";
-                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-                    backgroundTask.execute(method, result);
+                    if (result.equals("10011000001")){
+                        String method = "login";
+                        BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+                        backgroundTask.execute(method, result);
+                        finish();
+                        intent = new Intent(SignUpActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         });

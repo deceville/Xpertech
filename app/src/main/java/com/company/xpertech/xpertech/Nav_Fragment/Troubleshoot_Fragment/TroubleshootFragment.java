@@ -74,8 +74,8 @@ public class TroubleshootFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = getArguments();
-        String boxNumber = bundle.getString("boxNumber");
+        /*Bundle bundle = getArguments();
+        String boxNumber = bundle.getString("boxNumber");*/
         String method = "troubleshoot";
         MenuTask menuTask = new MenuTask(getContext());
         menuTask.execute(method, "1001");
@@ -87,17 +87,6 @@ public class TroubleshootFragment extends Fragment {
 
     }
 
-    /*public void createList(){
-
-
-        // list of titles
-        troubleshootTitle.add("Set Top Box (STB) Configuration");
-        troubleshootTitle.add("TV Configuration (via Simple Set Button)");
-        troubleshootTitle.add("My set top box (STB) is not Booting Up");
-        troubleshootTitle.add("My TV has No Audio and/or Video Output");
-        troubleshootTitle.add("My TV is Showing \"Technical Problem\" Error/Pixilated Pictures/ON and OFF Programming");
-        troubleshootTitle.add("My TV Screen is Showing an Error Code - E1 / E2 / E11 / E4 / E6 / E14");
-    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -196,7 +185,7 @@ public class TroubleshootFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             alertDialog = new AlertDialog.Builder(ctx).create();
-            alertDialog.setTitle("Login Information....");
+            alertDialog.setTitle("");
         }
         @Override
         protected String doInBackground(String... params) {
@@ -321,8 +310,8 @@ public class TroubleshootFragment extends Fragment {
                 troubleshootList.add(trbl);
             }
 
-            recyclerView.setAdapter(mAdapter);
             mAdapter = new MyTroubleshootRecyclerViewAdapter(troubleshootList,mListener);
+            recyclerView.setAdapter(mAdapter);
         }
         /*Message msg = new Message();
         Bundle bundle = new Bundle();

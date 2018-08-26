@@ -50,12 +50,12 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
         btn_troubleshoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = getArguments();
+                /*Bundle bundle = getArguments();
                 String boxNumber = bundle.getString("boxNumber");
                 TroubleshootFragment fragment = new TroubleshootFragment();
                 bundle.putString("boxNumber", boxNumber);
-                fragment.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.content_main, fragment).addToBackStack("tag").commit();
+                fragment.setArguments(bundle);*/
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
             }
         });
 

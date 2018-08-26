@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".Main.SignUpActivity">
+        <activity android:name=".Main.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,6 +32,9 @@
         <!--</activity>-->
         <activity
             android:name=".Main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Main.SignUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--<activity-->
             <!--android:name=".MainActivity"-->
