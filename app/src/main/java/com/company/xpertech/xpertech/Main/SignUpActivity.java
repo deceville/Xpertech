@@ -1,9 +1,12 @@
 package com.company.xpertech.xpertech.Main;
 
 import android.Manifest;
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,9 +25,19 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 
-public class SignUpActivity extends AppCompatActivity{
+public class SignUpActivity extends AppCompatActivity {
 
     TextView qr_result;
     SurfaceView cameraPreview;
@@ -32,9 +45,18 @@ public class SignUpActivity extends AppCompatActivity{
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
+    boolean read = false;
+
     TextView qr_details;
+    Intent intent;
+
+    Button btn_enter;
 
     final int RequestCameraPermissionID = 1001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +66,25 @@ public class SignUpActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_scan_qr);
 
+        sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
+
         //Open Enter Code Activity
         qr_result = (TextView) findViewById(R.id.qr_result);
 
-        /*btn_entercode.setOnClickListener(new View.OnClickListener() {
+        btn_enter = (Button) findViewById(R.id.btn_enter);
+        final String result = "10011000001";
+        btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                editor = sharedPref.edit();
+                editor.putString("boxNumber", "1001");
+                editor.commit();
+                //intent.putExtra("boxNumber", boxNumber);
                 finish();
-                startActivity(new Intent(SignUpActivity.this, EnterCodeActivity.class));
+                intent = new Intent(SignUpActivity.this, MainActivity.class);
+                startActivity(intent);
             }
-        });*/
-
+        });
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
 
@@ -83,14 +113,8 @@ public class SignUpActivity extends AppCompatActivity{
                     e.printStackTrace();
                 }
             }
-
-
             @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-
-            }
-
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {}
 
             @Override
             public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
@@ -109,59 +133,16 @@ public class SignUpActivity extends AppCompatActivity{
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                String result = qrcodes.valueAt(0).displayValue;
-                if(qrcodes.size() != 0) {
+                //String result = qrcodes.valueAt(0).displayValue;
 
-                    if(result.equals("Xpertech")){
-                        finish();
-                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                    }
-                    else{
-                        qr_result.setText("Invalid QR code. Please try again.");
-                        //   startActivity(new Intent(SignUpActivity.this, DeviceSummaryActivity.class));
-                    }
-                    //dialogHandler(result);
+                if (qrcodes.size() != 0) {
+                    String method = "login";
+                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+                    backgroundTask.execute(method, result);
                 }
             }
         });
 
-    }
-
-    private void dialogHandler(String result) {
-
-        final String shareResult = result;
-
-        final Dialog d = new Dialog(getApplicationContext());
-        d.setTitle("Cable Box Details");
-        d.setContentView(R.layout.activity_device_summary);
-        d.setCancelable(false);
-
-        qr_details = (TextView) d.findViewById(R.id.qr_details);
-
-        qr_details.setText(shareResult);
-
-        //Back Button
-        Button btn_back = (Button) d.findViewById(R.id.btn_back);
-
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d.dismiss();
-            }
-        });
-
-        //Proceed button
-        Button btn_proceed = (Button) d.findViewById(R.id.btn_proceed);
-
-        btn_proceed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-            }
-        });
-
-        d.show();
     }
 
     @Override
@@ -183,4 +164,79 @@ public class SignUpActivity extends AppCompatActivity{
         }
     }
 
+
+    public class BackgroundTask extends AsyncTask<String, Void, String> {
+        AlertDialog alertDialog;
+        Context ctx;
+        public String boxNumber = null;
+
+        public BackgroundTask(Context ctx) {
+            this.ctx = ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("Login Information....");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String login_url = "http://10.0.2.2/xpertech/login.php";
+            String method = params[0];
+            if (method.equals("login")) {
+                String accountNumber = params[1];
+                try {
+                    URL url = new URL(login_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String data = URLEncoder.encode("accountNumber", "UTF-8") + "=" + URLEncoder.encode(accountNumber, "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    String response = "";
+                    String line = "";
+                    while ((line = bufferedReader.readLine()) != null) {
+                        response += line;
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return response;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            String[] line = result.split("\\,");
+            boxNumber = line[0];
+            alertDialog.setMessage(boxNumber);
+            alertDialog.show();
+            editor = sharedPref.edit();
+            editor.putString("boxNumber", boxNumber);
+            editor.commit();
+            //intent.putExtra("boxNumber", boxNumber);
+            finish();
+            intent = new Intent(SignUpActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
 }

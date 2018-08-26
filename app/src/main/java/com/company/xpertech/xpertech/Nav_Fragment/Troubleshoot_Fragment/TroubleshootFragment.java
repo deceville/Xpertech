@@ -1,6 +1,8 @@
 package com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,13 +13,22 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
-import com.company.xpertech.xpertech.R;
 import com.company.xpertech.xpertech.Method.Troubleshoot;
+import com.company.xpertech.xpertech.R;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +48,8 @@ public class TroubleshootFragment extends Fragment {
 
     ArrayList <String> troubleshootTitle;
     ArrayList <Troubleshoot> troubleshootList;
+
+    View view = null;
 
     RecyclerView recyclerView;
 
@@ -61,15 +74,21 @@ public class TroubleshootFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle bundle = getArguments();
+        String boxNumber = bundle.getString("boxNumber");
+        String method = "troubleshoot";
+        MenuTask menuTask = new MenuTask(getContext());
+        menuTask.execute(method, "1001");
+
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
     }
 
-    public void creatList(){
-        troubleshootTitle = new ArrayList<String>();
-        troubleshootList = new ArrayList<Troubleshoot>();
+    /*public void createList(){
+
 
         // list of titles
         troubleshootTitle.add("Set Top Box (STB) Configuration");
@@ -78,31 +97,26 @@ public class TroubleshootFragment extends Fragment {
         troubleshootTitle.add("My TV has No Audio and/or Video Output");
         troubleshootTitle.add("My TV is Showing \"Technical Problem\" Error/Pixilated Pictures/ON and OFF Programming");
         troubleshootTitle.add("My TV Screen is Showing an Error Code - E1 / E2 / E11 / E4 / E6 / E14");
-    }
+    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         getActivity().setTitle("Troubleshoot");
+        troubleshootTitle = new ArrayList<String>();
+        troubleshootList = new ArrayList<Troubleshoot>();
 
-        final View view = inflater.inflate(R.layout.fragment_troubleshoot_list, container, false);
+         view = inflater.inflate(R.layout.fragment_troubleshoot_list, container, false);
 
-        creatList();
 
-        for (int i = 0; i < troubleshootTitle.size(); i++){
-            Troubleshoot trbl = new Troubleshoot(troubleshootTitle.get(i));
-            troubleshootList.add(trbl);
-        }
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
         Context context = view.getContext();
-        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        mAdapter = new MyTroubleshootRecyclerViewAdapter(troubleshootList,mListener);
-        recyclerView.setAdapter(mAdapter);
 
         EditText editText = (EditText) view.findViewById(R.id.search_text);
         editText.addTextChangedListener(new TextWatcher() {
@@ -168,5 +182,155 @@ public class TroubleshootFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Troubleshoot item);
+    }
+
+    public class MenuTask extends AsyncTask<String,Void,String> {
+        Context ctx;
+        AlertDialog alertDialog;
+
+        public MenuTask(Context ctx)
+        {
+            this.ctx =ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("Login Information....");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String troubleshoot_url = "http://10.0.2.2/xpertech/troubleshoot.php";
+            String selfinstall_url = "http://10.0.2.2/xpertech/selfinstall.php";
+            String usermanual_url = "http://10.0.2.2/xpertech/usermanual.php";
+            String method = params[0];
+            if(method.equals("troubleshoot")){
+                String box_number = params[1];
+                try {
+                    URL url = new URL(troubleshoot_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String response = "";
+                    String line = "";
+                    while ((line = bufferedReader.readLine())!=null)
+                    {
+                        response += line;
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return response;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(method.equals("selfinstall")){
+                String box_number = params[1];
+                try {
+                    URL url = new URL(selfinstall_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String response = "";
+                    String line = "";
+                    while ((line = bufferedReader.readLine())!=null)
+                    {
+                        response += line;
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return response;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(method.equals("usermanual")){
+                String box_number = params[1];
+                try {
+                    URL url = new URL(usermanual_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String response = "";
+                    String line = "";
+                    while ((line = bufferedReader.readLine())!=null)
+                    {
+                        response += line;
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return response;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            String[] title = result.split("\\$");
+            for (int i = 0; i < title.length; i++) {
+                troubleshootTitle.add(title[i]);
+            }
+            for (int i = 0; i < troubleshootTitle.size(); i++){
+                Troubleshoot trbl = new Troubleshoot(troubleshootTitle.get(i));
+                troubleshootList.add(trbl);
+            }
+
+            recyclerView.setAdapter(mAdapter);
+            mAdapter = new MyTroubleshootRecyclerViewAdapter(troubleshootList,mListener);
+        }
+        /*Message msg = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("title_list", title_list);
+        msg.setData(bundle);
+        Handler handler = new Handler();
+        handler.sendMessage(msg);*/
+
+
     }
 }

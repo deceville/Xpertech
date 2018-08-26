@@ -12,6 +12,8 @@ import android.widget.Button;
 
 import com.company.xpertech.xpertech.Method.Troubleshoot;
 import com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment.PackagesFragment;
+import com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment.ManualListFragment;
+import com.company.xpertech.xpertech.Nav_Fragment.Remote_Fragment.RemoteListFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment.SelfInstallFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootFragment;
 import com.company.xpertech.xpertech.R;
@@ -41,14 +43,19 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Button btn_troubleshoot = (Button) view.findViewById(R.id.btn_troubleshoot);
         btn_troubleshoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
+                Bundle bundle = getArguments();
+                String boxNumber = bundle.getString("boxNumber");
+                TroubleshootFragment fragment = new TroubleshootFragment();
+                bundle.putString("boxNumber", boxNumber);
+                fragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.content_main, fragment).addToBackStack("tag").commit();
             }
         });
 
@@ -67,6 +74,23 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
                 getFragmentManager().beginTransaction().replace(R.id.content_main, new SelfInstallFragment()).addToBackStack("tag").commit();
             }
         });
+
+        Button btn_manual = (Button) view.findViewById(R.id.btn_manual);
+        btn_manual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new ManualListFragment()).addToBackStack("tag").commit();
+            }
+        });
+
+        Button btn_remote = (Button) view.findViewById(R.id.btn_remote);
+        btn_remote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction().replace(R.id.content_main, new RemoteListFragment()).addToBackStack("tag").commit();
+            }
+        });
+
     }
 
     /**
@@ -97,6 +121,9 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
 
 
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
