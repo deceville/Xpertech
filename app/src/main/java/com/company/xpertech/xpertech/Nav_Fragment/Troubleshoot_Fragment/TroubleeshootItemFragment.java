@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import pl.droidsonroids.gif.GifImageView;
 
 import static android.Manifest.permission.CALL_PHONE;
 
@@ -54,9 +57,13 @@ public class TroubleeshootItemFragment extends Fragment {
     private String mParam2;
     private static String data = null;
     private static int position = 0;
-    ArrayList<Troubleshoot> troubleshootArrayList= new ArrayList<Troubleshoot>();
+    static ArrayList<Troubleshoot> troubleshootArrayList= new ArrayList<Troubleshoot>();
     int cnt = 0;
     Context ctx;
+    View view;
+    GifImageView gif;
+
+    String BOX_NUMBER_SESSION;
 
     private OnFragmentInteractionListener mListener;
 
@@ -89,24 +96,31 @@ public class TroubleeshootItemFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Bundle bundle = getArguments();
+        position = bundle.getInt("position");
+        BOX_NUMBER_SESSION = bundle.getString("BOX_NUMBER_SESSION");
+        troubleshootArrayList= new ArrayList<Troubleshoot>();
+        SubMenuTask subMenuTask = new SubMenuTask(getContext());
+        subMenuTask.execute("troubleshoot_steps", (position+1)+"");
+        Log.d("SIZE", troubleshootArrayList.size()+"");
     }
 
-    public void next(final int index, View view){
-        TextView txt = (TextView) view.findViewById(R.id.item_text);
+    public void next(final int index){
+        TextView txt = (TextView) this.view.findViewById(R.id.item_text);
         Troubleshoot troubleshoot = troubleshootArrayList.get(index);
         txt.setText(troubleshoot.getInstruct());
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        data = bundle.getString("data");
-        position = bundle.getInt("position");
-        getProcess(position);
         final FragmentActivity actvty = (FragmentActivity) ctx;
+        this.view = view;
+
+        gif = (GifImageView) view.findViewById(R.id.gif_imageView);
+
 
         Button btn_done = (Button) view.findViewById(R.id.btn_done);
-        next(cnt, view);
 
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,9 +141,13 @@ public class TroubleeshootItemFragment extends Fragment {
                         d.dismiss();
                         cnt++;
                         if(cnt < troubleshootArrayList.size()){
-                            next(cnt, view);
+                            next(cnt);
                         } else {
+                            troubleshootArrayList = new ArrayList<Troubleshoot>();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                             TroubleshootFragment tf = new TroubleshootFragment();
+                            tf.setArguments(bundle);
                             actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                         }
                     }
@@ -155,9 +173,12 @@ public class TroubleeshootItemFragment extends Fragment {
                                 } else {
                                     requestPermissions(new String[]{CALL_PHONE}, 1);
                                 }
-
+                                troubleshootArrayList = new ArrayList<Troubleshoot>();
                                 d.dismiss();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                                 TroubleshootFragment tf = new TroubleshootFragment();
+                                tf.setArguments(bundle);
                                 actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                             }
                         });
@@ -166,7 +187,11 @@ public class TroubleeshootItemFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 d.dismiss();
+                                troubleshootArrayList = new ArrayList<Troubleshoot>();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                                 TroubleshootFragment tf = new TroubleshootFragment();
+                                tf.setArguments(bundle);
                                 actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                             }
                         });
@@ -177,71 +202,11 @@ public class TroubleeshootItemFragment extends Fragment {
 
     }
 
-    private void getProcess(int position){
-        switch(position){
-            case 0:
-                troubleshootArrayList.add(new Troubleshoot("1.)\tOn the Remote, press and hold OK button and Power button simultaneously until LED blinks 2x", 0));
-                troubleshootArrayList.add(new Troubleshoot("2.)\tPress 9-8-2 on the remote to unlock it for RCU programming, LED should blink 4x", 0));
-                troubleshootArrayList.add(new Troubleshoot("3.)\tPress and hold the OK button and Power button again simultaneously for 3-5 seconds until the LED blinks 2x", 0));
-                troubleshootArrayList.add(new Troubleshoot("4.)\tPress the assigned code 4998/2319 to be controlled", 0));
-                troubleshootArrayList.add(new Troubleshoot("5.)\tRemote control LED will blink 2x once correct code is entered", 0));
-                troubleshootArrayList.add(new Troubleshoot("6.)\tPress and hold the OK button and Power button simultaneously for 3-5 seconds until the LED blinks 2x", 0));
-                troubleshootArrayList.add(new Troubleshoot("7.)\tPress 9-8-2 on the remote to lock it for RCU programming, LED should blink 2x", 0));
-                break;
-//                GifImageView gif = (GifImageView) tru_view.findViewById(R.id.troubleshoot_item_image);
-//                gif.setImageResource(R.drawable.greenled);
-            case 1:
-                troubleshootArrayList.add(new Troubleshoot("1.)\tTurn on your TV",0));
-                troubleshootArrayList.add(new Troubleshoot("2.)\tPress and hold the Simple Set button until LED blinks 2x",0));
-                troubleshootArrayList.add(new Troubleshoot("3.)\tWhile pointing the remote control to your TV, press and hold the number button which corresponds to your TV brand until the TV turns off by itself\n" +
-                        "        1 = Samsung\t6 = Sharp\n" +
-                        "        2 = LG\t7 = Philips\n" +
-                        "        3 = Sony\t8 = JVC\n" +
-                        "        4 = Panasonic\t9 = Hitachi\n" +
-                        "        5 = Toshiba\t0 = Haier\n", 0));
-                troubleshootArrayList.add(new Troubleshoot("4.)\tTurn on your TV using the TV remote control",  0));
-                troubleshootArrayList.add(new Troubleshoot("5.)\tOnce turned on, perform a test using your remote control to your TV by", 0));
-                troubleshootArrayList.add(new Troubleshoot("6.)\tpressing the Volume Up and Volume Down", 0));
-                troubleshootArrayList.add(new Troubleshoot("7.)\tpressing the Mute button", 0));
-                troubleshootArrayList.add(new Troubleshoot("8.)\tTest the Channel +/- key on the Remote control", 0));
-                break;
-            case 2:
-                troubleshootArrayList.add(new Troubleshoot("1.)\tMake sure your STB is plugged in", 0));
-                troubleshootArrayList.add(new Troubleshoot("2.)\tCheck your STB front panel if it is turned on (LED is green)", 0));
-                troubleshootArrayList.add(new Troubleshoot("3.)\tIf light is green and still not booting up, perform hard reset by unplugging the STB from the wall socket and plug it back in after 5 seconds", 0));
-                break;
-            case 3:
-                troubleshootArrayList.add(new Troubleshoot("1.)\tMake sure that your TV is not on standby mode", 0));
-                troubleshootArrayList.add(new Troubleshoot("2.)\tCheck the connections between the STB and TV if firmly and properly connected", 0));
-                troubleshootArrayList.add(new Troubleshoot("3.)\tOn your TV, select the correct Audio/Video input or source (example: AV1, AV2, HDM1 HDM2, etc.)", 0));
-                troubleshootArrayList.add(new Troubleshoot("4.)\tPower on the l STB", 0));
-                troubleshootArrayList.add(new Troubleshoot("5.)\tCheck TV and STB volume functions", 0));
-                troubleshootArrayList.add(new Troubleshoot("6.)\tIf issue persists, perform hard reset by unplugging the STB from the wall socket and plug it back in after 5 seconds", 0));
-                break;
-            case 4:
-                troubleshootArrayList.add(new Troubleshoot("1.)\tCheck if coaxial cable (RG6) is firmly connected and secured", 0));
-                troubleshootArrayList.add(new Troubleshoot("2.)\tPress the MENU button on your remote control then navigate to SETTINGS", 0));
-                troubleshootArrayList.add(new Troubleshoot("3.)\tKey in default PIN as 0000 or 9998", 0));
-                troubleshootArrayList.add(new Troubleshoot("4.)\tNavigate to the following options SYSTEM SETUP > INSTALLATION SETUP > SATELLITE SETUP > LNB POWERING", 0));
-                troubleshootArrayList.add(new Troubleshoot("5.)\tToggle ON/OFF using the LEFT and RIGHT buttons on the remote", 0));
-                troubleshootArrayList.add(new Troubleshoot("6.)\tfor the Primary STB - must be set to ON", 0));
-                troubleshootArrayList.add(new Troubleshoot("7.)\tfor 2nd/3rd STB - must be set to OFF",0));
-                break;
-            case 5:
-                troubleshootArrayList.add(new Troubleshoot("1.)\tTurn the STB off and locate where the smart card is inserted", 0));
-                troubleshootArrayList.add(new Troubleshoot("2.)\tGently take out the smart card and check for any physical defects", 0));
-                troubleshootArrayList.add(new Troubleshoot("3.)\tYou may try to wipe the gold chip with a soft, dry, non-abrasive cloth to clear any dirt build up", 0));
-                troubleshootArrayList.add(new Troubleshoot("4.)\tInsert the smart card back to the card slot the same way how it was removed", 0));
-                troubleshootArrayList.add(new Troubleshoot("5.)\tMake sure that the smart card is properly inserted and seated securely", 0));
-                break;
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_troubleshoot_item, container, false);
+        View view = inflater.inflate(R.layout.fragment_troubleshoot_item, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -285,27 +250,27 @@ public class TroubleeshootItemFragment extends Fragment {
     }
 
     public class SubMenuTask extends AsyncTask<String,Void,String> {
-        AlertDialog alertDialog;
         Context ctx;
-        SubMenuTask(Context ctx)
+        AlertDialog alertDialog;
+
+        public SubMenuTask(Context ctx)
         {
             this.ctx =ctx;
         }
+
         @Override
         protected void onPreExecute() {
             alertDialog = new AlertDialog.Builder(ctx).create();
-            alertDialog.setTitle("Login Information....");
+            alertDialog.setTitle("");
         }
         @Override
         protected String doInBackground(String... params) {
-            String troubleshoot_steps_url = "http://10.0.2.2/xpertech/troubleshoot_steps.php";
-            String selfinstall_steps_url = "http://10.0.2.2/xpertech/selfinstall_steps.php";
-            String usermanual_steps_url = "http://10.0.2.2/xpertech/usermanual_steps.php";
+            String troubleshoot_url = "http://10.0.2.2/xpertech/troubleshoot_steps.php";
             String method = params[0];
-            if(method.equals("troubleshoot")){
+            if(method.equals("troubleshoot_steps")){
                 String troubleshoot_id = params[1];
                 try {
-                    URL url = new URL(troubleshoot_steps_url);
+                    URL url = new URL(troubleshoot_url);
                     HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setDoOutput(true);
@@ -321,10 +286,13 @@ public class TroubleeshootItemFragment extends Fragment {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
                     String response = "";
                     String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
+                    line = bufferedReader.readLine();
+
+                    String[] step = line.split("\\$");
+                    for (int i = 0; i < step.length; i++) {
+                        TroubleeshootItemFragment.troubleshootArrayList.add(new Troubleshoot(step[i],0));
                     }
+
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();
@@ -335,88 +303,28 @@ public class TroubleeshootItemFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            else if(method.equals("selfinstall")){
-                String selfinstall_id = params[1];
-                try {
-                    URL url = new URL(selfinstall_steps_url);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                    String data = URLEncoder.encode("selfinstall_id","UTF-8")+"="+URLEncoder.encode(selfinstall_id,"UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String response = "";
-                    String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return response;
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else if(method.equals("usermanual")){
-                String manual_id = params[1];
-                try {
-                    URL url = new URL(usermanual_steps_url);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                    String data = URLEncoder.encode("manual_id","UTF-8")+"="+URLEncoder.encode(manual_id,"UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String response = "";
-                    String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return response;
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+
             return null;
         }
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);
         }
+
         @Override
         protected void onPostExecute(String result) {
-            String [] step = result.split("\\$");
-            ArrayList<String> step_list = new ArrayList<String>();
-            for (int i = 0; i < step.length; i++){
-                step_list.add(step[i]);
+            if (position == 2){
+                gif.setImageResource(R.drawable.remote);
+            }else if (position == 3){
+                gif.setImageResource(R.drawable.greenled);
+            }else if (position == 4){
+                gif.setImageResource(R.drawable.audiovideo);
+            }else if (position == 5){
+                gif.setImageResource(R.drawable.coxial);
             }
-            alertDialog.setMessage(step_list.get(0));
-            alertDialog.show();
-
+            next(cnt);
         }
+
+
     }
 }

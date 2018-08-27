@@ -72,17 +72,24 @@ public class SignUpActivity extends AppCompatActivity {
         qr_result = (TextView) findViewById(R.id.qr_result);
 
         btn_enter = (Button) findViewById(R.id.btn_enter);
-        final String result = "10011000001";
+        final String result = "10011000000001";
+        final String BOX_NUMBER_SESSION = "1001";
         btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor = sharedPref.edit();
-                editor.putString("boxNumber", "1001");
-                editor.commit();
-                //intent.putExtra("boxNumber", boxNumber);
-                finish();
-                intent = new Intent(SignUpActivity.this, MainActivity.class);
+
+                // Pass box number to main
+                intent = new Intent(getBaseContext(), MainActivity.class);
+                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                 startActivity(intent);
+
+//                editor = sharedPref.edit();
+//                editor.putString("boxNumber", "1001");
+//                editor.commit();
+//                //intent.putExtra("boxNumber", boxNumber);
+//                finish();
+//                intent = new Intent(SignUpActivity.this, MainActivity.class);
+//                startActivity(intent);
             }
         });
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
@@ -136,12 +143,14 @@ public class SignUpActivity extends AppCompatActivity {
                 String result = qrcodes.valueAt(0).displayValue;
 
                 if (qrcodes.size() != 0) {
-                    if (result.equals("10011000001")){
-                        String method = "login";
-                        BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-                        backgroundTask.execute(method, result);
+//                    String method = "login";
+//                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+//                    backgroundTask.execute(method, result);
+                    if (result.equals("10011000000001") || result.equals("10011000000002") || result.equals("10011000000003") || result.equals("10011000000004") || result.equals("10011000000005")){
+                        // Pass box number to main
+                        intent = new Intent(getBaseContext(), MainActivity.class);
+                        intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                         finish();
-                        intent = new Intent(SignUpActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -233,8 +242,6 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             String[] line = result.split("\\,");
             boxNumber = line[0];
-            alertDialog.setMessage(boxNumber);
-            alertDialog.show();
             editor = sharedPref.edit();
             editor.putString("boxNumber", boxNumber);
             editor.commit();

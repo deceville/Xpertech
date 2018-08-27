@@ -1,8 +1,6 @@
 package com.company.xpertech.xpertech.Main;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -22,10 +20,13 @@ import android.view.View;
 
 import com.company.xpertech.xpertech.Method.Packages;
 import com.company.xpertech.xpertech.Method.Troubleshoot;
+import com.company.xpertech.xpertech.Nav_Fragment.AboutNBCFragment;
+import com.company.xpertech.xpertech.Nav_Fragment.AboutXpertechFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment.ChannelFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment.PackagesFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.FeedbackFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.HomeFragment;
+import com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment.ManualListFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment.Sub_Manual_Fragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Remote_Fragment.RemoteItemFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Remote_Fragment.RemoteListFragment;
@@ -35,7 +36,6 @@ import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.IntroFra
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleeshootItemFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootConfirmationFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootFragment;
-import com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment.ManualListFragment;
 import com.company.xpertech.xpertech.R;
 
 import static android.Manifest.permission.CALL_PHONE;
@@ -55,9 +55,13 @@ public class MainActivity extends AppCompatActivity
         RemoteListFragment.OnFragmentInteractionListener,
         RemoteItemFragment.OnFragmentInteractionListener,
         ManualListFragment.OnFragmentInteractionListener,
-        Sub_Manual_Fragment.OnFragmentInteractionListener{
+        Sub_Manual_Fragment.OnFragmentInteractionListener,
+        AboutXpertechFragment.OnFragmentInteractionListener,
+        AboutNBCFragment.OnFragmentInteractionListener{
 
     Bundle bundle;
+    Bundle SESSION_BUNDLE;
+    String BOX_NUMBER_SESSION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +88,22 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Pass box number session
+        BOX_NUMBER_SESSION = getIntent().getStringExtra("BOX_NUMBER_SESSION");
+        SESSION_BUNDLE = new Bundle();
+        SESSION_BUNDLE.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+        HomeFragment hf = new HomeFragment();
+        hf.setArguments(SESSION_BUNDLE);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, hf).commit();
+
         //String boxNumber = getIntent().getStringExtra("boxNumber");
-        SharedPreferences sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
-        String boxNumber = sharedPref.getString("def", "boxNumber");
-        bundle = new Bundle();
-        bundle.putString("boxNumber", boxNumber);
-        HomeFragment fragment = new HomeFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+//        SharedPreferences sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
+//        String boxNumber = sharedPref.getString("def", "boxNumber");
+//        bundle = new Bundle();
+//        bundle.putString("boxNumber", boxNumber);
+//        HomeFragment fragment = new HomeFragment();
+//        fragment.setArguments(bundle);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
     }
 
     @Override
@@ -134,13 +146,14 @@ public class MainActivity extends AppCompatActivity
 
         switch(item.getItemId()){
             case R.id.nav_troubleshoot:
-                SharedPreferences sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
-                String boxNumber = sharedPref.getString("def", "boxNumber");
-                bundle = new Bundle();
-                bundle.putString("boxNumber", boxNumber);
-                TroubleshootFragment fragment = new TroubleshootFragment();
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).addToBackStack("tag").commit();
+//                SharedPreferences sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
+//                String boxNumber = sharedPref.getString("def", "boxNumber");
+//                bundle = new Bundle();
+//                bundle.putString("boxNumber", boxNumber);
+                TroubleshootFragment tf = new TroubleshootFragment();
+                tf.setArguments(SESSION_BUNDLE);
+                //fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).addToBackStack("tag").commit();
                 break;
             case R.id.nav_selfInstall:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new SelfInstallFragment()).addToBackStack("tag").commit();
@@ -170,6 +183,15 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_share:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FeedbackFragment()).addToBackStack("tag").commit();
                 break;
+            case R.id.nav_aboutnbc:
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new AboutNBCFragment()).addToBackStack("tag").commit();
+                break;
+            case R.id.nav_aboutxpert:
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new AboutXpertechFragment()).addToBackStack("tag").commit();
+                break;
+            case R.id.nav_logout:
+                finish();
+                System.exit(0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

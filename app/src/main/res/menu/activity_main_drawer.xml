@@ -36,9 +36,28 @@
                 android:title="Feedback" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_call"
                 android:title="Call Provider" />
         </menu>
     </item>
+
+    <item android:title="About">
+        <menu>
+            <item
+                android:id="@+id/nav_aboutxpert"
+                android:icon="@drawable/ic_perm"
+                android:title="About Xpertech" />
+            <item
+                android:id="@+id/nav_aboutnbc"
+                android:icon="@drawable/ic_info"
+                android:title="About New Bacolod Cable TV" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_exit"
+        android:title="Logout" />
+
 
 </menu>

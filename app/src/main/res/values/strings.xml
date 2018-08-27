@@ -22,18 +22,6 @@
     <string name="btn_enter_code">PROCEED</string>
     <string name="btn_cancel">CANCEL</string>
 
-    //Troubleshoot procedure for first box
-
-    //Troubleshoot #1
-    <string name="troubleshoot_title_01">Set Top Box (STB) Configuration</string>
-    <string name="troubleshoot_01_01">On the Remote, press and hold OK button and Power button simultaneously until LED blinks 2x</string>
-    <string name="troubleshoot_01_02">Press 9-8-2 on the remote to unlock it for RCU programming, LED should blink 4x</string>
-    <string name="troubleshoot_01_03">Press and hold the OK button and Power button again simultaneously for 3-5 seconds until the LED blinks 2x</string>
-    <string name="troubleshoot_01_04">Press the assigned code 4998/2319 to be controlled</string>
-    <string name="troubleshoot_01_05">Remote control LED will blink 2x once correct code is entered</string>
-    <string name="troubleshoot_01_06">Press and hold the OK button and Power button simultaneously for 3-5 seconds until the LED blinks 2x</string>
-    <string name="troubleshoot_01_07">Press 9-8-2 on the remote to lock it for RCU programming, LED should blink 2x</string>
-
     <string name="fragment_intro_instruction">Please follow the steps provided on the screen and answer the questions.</string>
 
     <string name="accept">Accept</string>
@@ -72,6 +60,24 @@
             \n\nEmail: josh.sanchez1012spotify@gmail.com
             \n\nPhone: (+63) 928 520-0630
     </string>
+
+    <string name="about_nbctv">NEW BACOLOD CABLE TV</string>
+    <string name="slogan">We say our services are the best this city has to offer.
+    \nBest equipment. Best people.</string>
+    <string name="desc_01">We are claiming to be the first company in the country to offer the Triple Play service (internet, phone and cable TV).</string>
+    <string name="desc_02">For Cable TV services, we offer Digital Cable TV that is HD capable and has hundreds of listed channels. Choose the package that suits your lifestyle for a reasonable and cheap cost. </string>
+    <string name="desc_03">For Phone/Landline services, check out our independent telephone system that is in partnership with PLDT and Globe to empower our customers. It can also do the new technology called VoIP or Voice over Internet Protocol which allows you to call via the internet. </string>
+    <string name="desc_04">For Internet, we pride ourselves to offer the best internet service provider in the city which has cable broadband faster than other providers\' DSL connections. Reliable and cheap. That is our guarantee. By the way, did we say NO CAP LIMIT? </string>
+    <string name="desc_05">Avail our packages individually, double play or triple play. You can also make your own cable tv channel selections. Here at NBCTV, you get to have what you want, when you want. </string>
+    <string name="discount">Get discounts if you subscribe online. Just visit NEWBACOLODCABLE.COM/SUBSCRIBE </string>
+    <string name="contact">You can also call us at (034) 709-1001 / 435-7182 </string>
+    <string name="website">Visit our website at newbacolodcable.com</string>
+    <string name="address">Physical address @ 13th Street, Corner Hilado Extension, Terra Dolce Building, Barangay Villamonte, Bacolod City. </string>
+    <string name="signature">New Bacolod Cable TV Technology Unmasked. </string>
+
+    <string name="about_xpertech">Xpertech was launched to benefit cable box users and subscribers of New Bacolod Cable TV as the city\'s own reliable and affordable cable service provider. It is created by 3 outstanding and aspiring programmers from the University of St. La Salle.
+        \n\nXpertech allows users to do troubleshooting in the most hassle-free way as it is portable and user-friendly. It also showcases features for users who are eligible for troubleshooting as it caters user-level options as an added security value for both the software and cable subscription. Xpertech also allows users to scan their cable boxes to identify information about their services, box info and troubleshooting that can be done to fix any occuring issues that it may or is encountering.
+        \n\nXpertech advocates and believes that \'troubleshooting on your own\' your cable service has never been this easy.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -1,27 +1,24 @@
 package com.company.xpertech.xpertech.Nav_Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.company.xpertech.xpertech.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FeedbackFragment.OnFragmentInteractionListener} interface
+ * {@link AboutNBCFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FeedbackFragment#newInstance} factory method to
+ * Use the {@link AboutNBCFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FeedbackFragment extends Fragment {
+public class AboutNBCFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,7 +30,7 @@ public class FeedbackFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FeedbackFragment() {
+    public AboutNBCFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +40,11 @@ public class FeedbackFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FeedbackFragment.
+     * @return A new instance of fragment AboutNBCFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FeedbackFragment newInstance(String param1, String param2) {
-        FeedbackFragment fragment = new FeedbackFragment();
+    public static AboutNBCFragment newInstance(String param1, String param2) {
+        AboutNBCFragment fragment = new AboutNBCFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,33 +65,8 @@ public class FeedbackFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_feedback, container, false);
-        getActivity().setTitle("Feedback");
-
-        final EditText email_subject = (EditText) view.findViewById(R.id.email_subject);
-        final EditText email_msg = (EditText) view.findViewById(R.id.email_msg);
-        Button btn_email = (Button) view.findViewById(R.id.btn_email);
-        btn_email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMail(email_subject.getText().toString(), email_msg.getText().toString());
-            }
-        });
-
-        return view;
-    }
-
-    public void sendMail(String title, String message){
-        Intent intent = null, chooser = null;
-            intent = new Intent(Intent.ACTION_SEND);
-            intent.setData(Uri.parse("mailto:"));
-            String[] to = {"xpertech@gmail.com"};
-            intent.putExtra(Intent.EXTRA_EMAIL, to);
-            intent.putExtra(Intent.EXTRA_SUBJECT, title);
-            intent.putExtra(Intent.EXTRA_TEXT, message);
-            intent.setType("message/rfc822");
-            chooser = Intent.createChooser(intent, "Send Email");
-            startActivity(chooser);
+        getActivity().setTitle("About New Bacolod Cable");
+        return inflater.inflate(R.layout.fragment_about_nbc, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

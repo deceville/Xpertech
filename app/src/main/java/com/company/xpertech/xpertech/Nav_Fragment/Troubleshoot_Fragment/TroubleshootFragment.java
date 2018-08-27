@@ -50,6 +50,8 @@ public class TroubleshootFragment extends Fragment {
     ArrayList <Troubleshoot> troubleshootList;
 
     View view = null;
+    static String BOX_NUMBER_SESSION;
+    static Bundle BUNDLE_SESSION;
 
     RecyclerView recyclerView;
 
@@ -74,12 +76,14 @@ public class TroubleshootFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*Bundle bundle = getArguments();
-        String boxNumber = bundle.getString("boxNumber");*/
+        BUNDLE_SESSION = getArguments();
+        BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
         String method = "troubleshoot";
-        MenuTask menuTask = new MenuTask(getContext());
-        menuTask.execute(method, "1001");
+        TroubleeshootItemFragment tif = new TroubleeshootItemFragment();
 
+
+        MenuTask menuTask = new MenuTask(getContext());
+        menuTask.execute(method, BOX_NUMBER_SESSION);
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);

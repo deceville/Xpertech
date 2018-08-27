@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,12 +51,17 @@ public class HomeFragment extends Fragment implements TroubleshootFragment.OnLis
         btn_troubleshoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle BUNDLE_SESSION = getArguments();
+                String BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
+                TroubleshootFragment tf = new TroubleshootFragment();
+
+                tf.setArguments(BUNDLE_SESSION);
                 /*Bundle bundle = getArguments();
                 String boxNumber = bundle.getString("boxNumber");
                 TroubleshootFragment fragment = new TroubleshootFragment();
                 bundle.putString("boxNumber", boxNumber);
                 fragment.setArguments(bundle);*/
-                getFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_main, tf).addToBackStack("tag").commit();
             }
         });
 
