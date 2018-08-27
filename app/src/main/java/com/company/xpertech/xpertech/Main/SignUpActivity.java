@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -70,16 +71,22 @@ public class SignUpActivity extends AppCompatActivity {
         //Open Enter Code Activity
         qr_result = (TextView) findViewById(R.id.qr_result);
 
-        //btn_enter = (Button) findViewById(R.id.btn_enter);
+        btn_enter = (Button) findViewById(R.id.btn_enter);
         final String result = "10011000000001";
         final String BOX_NUMBER_SESSION = "1001";
-        /*btn_enter.setOnClickListener(new View.OnClickListener() {
+        btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 // Pass box number to main
                 intent = new Intent(getBaseContext(), MainActivity.class);
-                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+//                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+//                startActivity(intent);
+
+                editor = sharedPref.edit();
+                editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+                editor.commit();
+
                 startActivity(intent);
 
 //                editor = sharedPref.edit();
@@ -90,7 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
 //                intent = new Intent(SignUpActivity.this, MainActivity.class);
 //                startActivity(intent);
             }
-        });*/
+        });
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
 
@@ -139,19 +146,19 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                String result = qrcodes.valueAt(0).displayValue;
-
+                //String result = qrcodes.valueAt(0).displayValue;
+                String result = "10021000001";
                 if (qrcodes.size() != 0) {
-//                    String method = "login";
-//                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-//                    backgroundTask.execute(method, result);
-                    if (result.equals("10011000000001") || result.equals("10011000000002") || result.equals("10011000000003") || result.equals("10011000000004") || result.equals("10011000000005")){
+                    String method = "login";
+                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+                    backgroundTask.execute(method, result);
+                    /*if (result.equals("10011000000001") || result.equals("10011000000002") || result.equals("10011000000003") || result.equals("10011000000004") || result.equals("10011000000005")){
                         // Pass box number to main
                         intent = new Intent(getBaseContext(), MainActivity.class);
                         intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                         finish();
                         startActivity(intent);
-                    }
+                    }*/
                 }
             }
         });
@@ -241,13 +248,16 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             String[] line = result.split("\\,");
             boxNumber = line[0];
+
+            intent = new Intent(getBaseContext(), MainActivity.class);
+            intent.putExtra("BOX_NUMBER_SESSION", boxNumber);
+            finish();
+
+
             editor = sharedPref.edit();
-            editor.putString("boxNumber", boxNumber);
+            editor.putString("BOX_NUMBER_SESSION", boxNumber);
             editor.commit();
             //intent.putExtra("boxNumber", boxNumber);
-            finish();
-            intent = new Intent(SignUpActivity.this, MainActivity.class);
-            startActivity(intent);
         }
     }
 }

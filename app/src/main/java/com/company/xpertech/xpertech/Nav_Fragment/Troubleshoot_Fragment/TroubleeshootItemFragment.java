@@ -98,17 +98,26 @@ public class TroubleeshootItemFragment extends Fragment {
         }
 
         Bundle bundle = getArguments();
-        position = bundle.getInt("position");
+        position = bundle.getInt("position")+1;
         BOX_NUMBER_SESSION = bundle.getString("BOX_NUMBER_SESSION");
         troubleshootArrayList= new ArrayList<Troubleshoot>();
         SubMenuTask subMenuTask = new SubMenuTask(getContext());
-        subMenuTask.execute("troubleshoot_steps", (position+1)+"");
+        subMenuTask.execute("troubleshoot_steps", position+"");
         Log.d("SIZE", troubleshootArrayList.size()+"");
     }
 
     public void next(final int index){
         TextView txt = (TextView) this.view.findViewById(R.id.item_text);
         Troubleshoot troubleshoot = troubleshootArrayList.get(index);
+        if (position == 2){
+            gif.setImageResource(R.drawable.remote);
+        }else if (position == 3){
+            gif.setImageResource(R.drawable.greenled);
+        }else if (position == 4){
+            gif.setImageResource(R.drawable.audiovideo);
+        }else if (position == 5){
+            gif.setImageResource(R.drawable.coxial);
+        }
         txt.setText(troubleshoot.getInstruct());
     }
 
@@ -313,15 +322,6 @@ public class TroubleeshootItemFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            if (position == 2){
-                gif.setImageResource(R.drawable.remote);
-            }else if (position == 3){
-                gif.setImageResource(R.drawable.greenled);
-            }else if (position == 4){
-                gif.setImageResource(R.drawable.audiovideo);
-            }else if (position == 5){
-                gif.setImageResource(R.drawable.coxial);
-            }
             next(cnt);
         }
 

@@ -2,14 +2,17 @@ package com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,14 +79,18 @@ public class TroubleshootFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
+        //s = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "1002");
         BUNDLE_SESSION = getArguments();
-        BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
+        //BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
         String method = "troubleshoot";
         TroubleeshootItemFragment tif = new TroubleeshootItemFragment();
 
-
+        Log.d("BOX_NUMBER_SESSION",BOX_NUMBER_SESSION);
         MenuTask menuTask = new MenuTask(getContext());
         menuTask.execute(method, BOX_NUMBER_SESSION);
+//        menuTask.execute(method, "1001");
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);

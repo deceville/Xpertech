@@ -146,13 +146,6 @@ public class MainActivity extends AppCompatActivity
 
         switch(item.getItemId()){
             case R.id.nav_troubleshoot:
-//                SharedPreferences sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
-//                String boxNumber = sharedPref.getString("def", "boxNumber");
-//                bundle = new Bundle();
-//                bundle.putString("boxNumber", boxNumber);
-                TroubleshootFragment tf = new TroubleshootFragment();
-                tf.setArguments(SESSION_BUNDLE);
-                //fragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).addToBackStack("tag").commit();
                 break;
             case R.id.nav_selfInstall:
