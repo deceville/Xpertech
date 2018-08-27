@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -71,10 +70,10 @@ public class SignUpActivity extends AppCompatActivity {
         //Open Enter Code Activity
         qr_result = (TextView) findViewById(R.id.qr_result);
 
-        btn_enter = (Button) findViewById(R.id.btn_enter);
+        //btn_enter = (Button) findViewById(R.id.btn_enter);
         final String result = "10011000000001";
         final String BOX_NUMBER_SESSION = "1001";
-        btn_enter.setOnClickListener(new View.OnClickListener() {
+        /*btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -91,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
 //                intent = new Intent(SignUpActivity.this, MainActivity.class);
 //                startActivity(intent);
             }
-        });
+        });*/
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
 
