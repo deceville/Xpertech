@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2018 at 05:10 PM
+-- Generation Time: Aug 28, 2018 at 04:17 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.8
 
@@ -168,6 +168,17 @@ CREATE TABLE `selfinstall_steps` (
   `install_steps_desc` varchar(255) NOT NULL,
   `install_image_id` int(11) DEFAULT NULL,
   `selfinstall_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stat_info`
+--
+
+CREATE TABLE `stat_info` (
+  `type` varchar(255) NOT NULL,
+  `value` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

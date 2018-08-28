@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,7 +80,7 @@ public class TroubleshootFragment extends Fragment {
 
         SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
         //s = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "1002");
+        BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
         BUNDLE_SESSION = getArguments();
         //BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
         String method = "troubleshoot";

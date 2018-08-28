@@ -47,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
+    String BOX_NUMBER_SESSION;
 
     boolean read = false;
 
@@ -73,21 +74,23 @@ public class SignUpActivity extends AppCompatActivity {
 
         btn_enter = (Button) findViewById(R.id.btn_enter);
         final String result = "10011000000001";
-        final String BOX_NUMBER_SESSION = "1001";
+        //final String BOX_NUMBER_SESSION = "1001";
         btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // Pass box number to main
-                intent = new Intent(getBaseContext(), MainActivity.class);
+                // Pass box number to mainString method = "login";
+                BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+                backgroundTask.execute("login", result);
+
 //                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
 //                startActivity(intent);
 
-                editor = sharedPref.edit();
+                /*editor = sharedPref.edit();
                 editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-                editor.commit();
+                editor.commit();*/
 
-                startActivity(intent);
+                //startActivity(intent);
 
 //                editor = sharedPref.edit();
 //                editor.putString("boxNumber", "1001");
@@ -147,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
                 //String result = qrcodes.valueAt(0).displayValue;
-                String result = "10021000001";
+                String result = "10011000000001";
                 if (qrcodes.size() != 0) {
                     String method = "login";
                     BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
@@ -247,16 +250,18 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             String[] line = result.split("\\,");
-            boxNumber = line[0];
+            BOX_NUMBER_SESSION = line[0];
 
             intent = new Intent(getBaseContext(), MainActivity.class);
-            intent.putExtra("BOX_NUMBER_SESSION", boxNumber);
+            intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
             finish();
 
-
             editor = sharedPref.edit();
-            editor.putString("BOX_NUMBER_SESSION", boxNumber);
+            editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
             editor.commit();
+
+            intent = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(intent);
             //intent.putExtra("boxNumber", boxNumber);
         }
     }

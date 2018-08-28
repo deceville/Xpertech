@@ -32,6 +32,7 @@ import com.company.xpertech.xpertech.Nav_Fragment.Remote_Fragment.RemoteItemFrag
 import com.company.xpertech.xpertech.Nav_Fragment.Remote_Fragment.RemoteListFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment.SelfInstallFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment.Sub_Install_Fragment;
+import com.company.xpertech.xpertech.Nav_Fragment.StatisticsFragment.Statistics_Fragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.IntroFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleeshootItemFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootConfirmationFragment;
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity
         ManualListFragment.OnFragmentInteractionListener,
         Sub_Manual_Fragment.OnFragmentInteractionListener,
         AboutXpertechFragment.OnFragmentInteractionListener,
-        AboutNBCFragment.OnFragmentInteractionListener{
+        AboutNBCFragment.OnFragmentInteractionListener,
+        Statistics_Fragment.OnFragmentInteractionListener{
 
     Bundle bundle;
     Bundle SESSION_BUNDLE;
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity
 
         switch(item.getItemId()){
             case R.id.nav_troubleshoot:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).addToBackStack("tag").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new TroubleshootFragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_selfInstall:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new SelfInstallFragment()).addToBackStack("tag").commit();
@@ -172,6 +174,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_userManual:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new ManualListFragment()).addToBackStack("tag").commit();
+                break;
+            case R.id.nav_stat:
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new Statistics_Fragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_share:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new FeedbackFragment()).addToBackStack("tag").commit();

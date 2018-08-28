@@ -31,6 +31,9 @@
     <item android:title="Quick Assist">
         <menu>
             <item
+                android:id="@+id/nav_stat"
+                android:title="Statistics" />
+            <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Feedback" />
