@@ -73,15 +73,15 @@ public class SignUpActivity extends AppCompatActivity {
         qr_result = (TextView) findViewById(R.id.qr_result);
 
         btn_enter = (Button) findViewById(R.id.btn_enter);
-        final String result = "10011000000001";
+        //final String result = "10011000000001";
         //final String BOX_NUMBER_SESSION = "1001";
-        btn_enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        //btn_enter.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            //public void onClick(View v) {
 
                 // Pass box number to mainString method = "login";
-                BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-                backgroundTask.execute("login", result);
+                //BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+                //backgroundTask.execute("login", result);
 
 //                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
 //                startActivity(intent);
@@ -99,8 +99,8 @@ public class SignUpActivity extends AppCompatActivity {
 //                finish();
 //                intent = new Intent(SignUpActivity.this, MainActivity.class);
 //                startActivity(intent);
-            }
-        });
+           // }
+        //});
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
 
@@ -149,8 +149,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                //String result = qrcodes.valueAt(0).displayValue;
-                String result = "10011000000001";
+                String result = qrcodes.valueAt(0).displayValue;
+                //String result = "10011000000001";
                 if (qrcodes.size() != 0) {
                     String method = "login";
                     BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());

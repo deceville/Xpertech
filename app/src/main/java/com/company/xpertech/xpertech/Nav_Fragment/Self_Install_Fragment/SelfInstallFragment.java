@@ -16,10 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.company.xpertech.xpertech.Method.Troubleshoot;
-import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.MyTroubleshootRecyclerViewAdapter;
 import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleeshootItemFragment;
-import com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment.TroubleshootFragment;
 import com.company.xpertech.xpertech.R;
 
 import java.io.BufferedReader;
@@ -97,11 +94,11 @@ public class SelfInstallFragment extends Fragment {
 
         SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
         String BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
-        String method = "troubleshoot";
+        String method = "selfinstall";
         TroubleeshootItemFragment tif = new TroubleeshootItemFragment();
 
         Log.d("BOX_NUMBER_SESSION",BOX_NUMBER_SESSION);
-        TroubleshootFragment.MenuTask menuTask = new TroubleshootFragment.MenuTask(getContext());
+        SelfInstallFragment.MenuTask menuTask = new SelfInstallFragment.MenuTask(getContext());
         menuTask.execute(method, BOX_NUMBER_SESSION);
 
         getActivity().setTitle("Self Install");
@@ -305,25 +302,8 @@ public class SelfInstallFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             String[] title = result.split("\\$");
-            install = new String[title]
-            for (int i = 0; i < title.length; i++) {
-                troubleshootTitle.add(title[i]);
-            }
-            for (int i = 0; i < troubleshootTitle.size(); i++){
-                Troubleshoot trbl = new Troubleshoot(troubleshootTitle.get(i));
-                troubleshootList.add(trbl);
-            }
-
-            mAdapter = new MyTroubleshootRecyclerViewAdapter(troubleshootList,mListener);
-            recyclerView.setAdapter(mAdapter);
+            install = new String[title.length];
+            install = title;
         }
-        /*Message msg = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList("title_list", title_list);
-        msg.setData(bundle);
-        Handler handler = new Handler();
-        handler.sendMessage(msg);*/
-
-
     }
 }
