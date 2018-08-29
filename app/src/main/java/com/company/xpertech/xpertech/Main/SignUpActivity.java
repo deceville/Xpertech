@@ -73,24 +73,23 @@ public class SignUpActivity extends AppCompatActivity {
 
         //Open Enter Code Activity
         qr_result = (TextView) findViewById(R.id.qr_result);
-
-        btn_enter = (Button) findViewById(R.id.btn_enter);
-        final String result = "10011000000001";
-        final String BOX_NUMBER_SESSION = "1001";
-        btn_enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//btn_enter = (Button) findViewById(R.id.btn_enter);
+       // final String result = "10011000000001";
+      //  final String BOX_NUMBER_SESSION = "1001";
+      //  btn_enter.setOnClickListener(new View.OnClickListener() {
+     //       @Override
+      //      public void onClick(View v) {
 
                  //Pass box number to mainString method = "login";
-                BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-                backgroundTask.execute("login", result);
+      //          BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+    //            backgroundTask.execute("login", result);
 
 //                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
 //                startActivity(intent);
 
-                editor = sharedPref.edit();
-                editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-                editor.commit();
+       //         editor = sharedPref.edit();
+       //         editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+       //         editor.commit();
 
                 //startActivity(intent);
 
@@ -100,12 +99,12 @@ public class SignUpActivity extends AppCompatActivity {
 //                //intent.putExtra("boxNumber", boxNumber);
 //                finish();
 
-                Task task = new Task();
-                task.execute("stat","login", "pass", result);
-                intent = new Intent(SignUpActivity.this, MainActivity.class);
-                startActivity(intent);
-           }
-        });
+            //    Task task = new Task();
+            //    task.execute("stat","login", "pass", result);
+            //    intent = new Intent(SignUpActivity.this, MainActivity.class);
+            //    startActivity(intent);
+          // }
+       // });
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
 
