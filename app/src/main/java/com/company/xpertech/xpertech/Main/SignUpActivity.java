@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.company.xpertech.xpertech.AppEULA;
+import com.company.xpertech.xpertech.Method.Task;
 import com.company.xpertech.xpertech.R;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -48,6 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
     String BOX_NUMBER_SESSION;
+    String USER_SESSION;
 
     boolean read = false;
 
@@ -73,22 +75,22 @@ public class SignUpActivity extends AppCompatActivity {
         qr_result = (TextView) findViewById(R.id.qr_result);
 
         btn_enter = (Button) findViewById(R.id.btn_enter);
-        //final String result = "10011000000001";
-        //final String BOX_NUMBER_SESSION = "1001";
-        //btn_enter.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            //public void onClick(View v) {
+        final String result = "10011000000001";
+        final String BOX_NUMBER_SESSION = "1001";
+        btn_enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                // Pass box number to mainString method = "login";
-                //BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-                //backgroundTask.execute("login", result);
+                 //Pass box number to mainString method = "login";
+                BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
+                backgroundTask.execute("login", result);
 
 //                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
 //                startActivity(intent);
 
-                /*editor = sharedPref.edit();
+                editor = sharedPref.edit();
                 editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-                editor.commit();*/
+                editor.commit();
 
                 //startActivity(intent);
 
@@ -97,10 +99,13 @@ public class SignUpActivity extends AppCompatActivity {
 //                editor.commit();
 //                //intent.putExtra("boxNumber", boxNumber);
 //                finish();
-//                intent = new Intent(SignUpActivity.this, MainActivity.class);
-//                startActivity(intent);
-           // }
-        //});
+
+                Task task = new Task();
+                task.execute("stat","login", "pass", result);
+                intent = new Intent(SignUpActivity.this, MainActivity.class);
+                startActivity(intent);
+           }
+        });
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
 
@@ -150,18 +155,17 @@ public class SignUpActivity extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
                 String result = qrcodes.valueAt(0).displayValue;
+                USER_SESSION = result;
                 //String result = "10011000000001";
                 if (qrcodes.size() != 0) {
                     String method = "login";
                     BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
                     backgroundTask.execute(method, result);
-                    /*if (result.equals("10011000000001") || result.equals("10011000000002") || result.equals("10011000000003") || result.equals("10011000000004") || result.equals("10011000000005")){
-                        // Pass box number to main
-                        intent = new Intent(getBaseContext(), MainActivity.class);
-                        intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-                        finish();
-                        startActivity(intent);
-                    }*/
+                }
+                else
+                {
+                    Task task = new Task();
+                    task.execute("stat", "login", "fail", "0");
                 }
             }
         });
@@ -253,16 +257,29 @@ public class SignUpActivity extends AppCompatActivity {
             BOX_NUMBER_SESSION = line[0];
 
             intent = new Intent(getBaseContext(), MainActivity.class);
-            intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-            finish();
+//            intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+//            finish();
 
             editor = sharedPref.edit();
             editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+            editor.putString("USER_SESSION", USER_SESSION);
             editor.commit();
 
             intent = new Intent(getBaseContext(), MainActivity.class);
+
+            if(USER_SESSION != null) {
+                Task task = new Task();
+                task.execute("stat", "login", "pass", USER_SESSION);
+            }
+            else {
+                Task task = new Task();
+                task.execute("stat", "login", "fail", "0");
+            }
+
             startActivity(intent);
             //intent.putExtra("boxNumber", boxNumber);
         }
     }
+
+
 }

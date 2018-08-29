@@ -21,17 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
-        <TextView
-            android:textSize="20dp"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="Troubleshoot Rate"/>
-        <com.github.mikephil.charting.charts.PieChart
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            android:id="@+id/troubleshoot_piechart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
+        <!--<TextView-->
+            <!--android:textSize="20dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:text="Troubleshoot Rate"/>-->
+        <!--<com.github.mikephil.charting.charts.PieChart-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:id="@+id/troubleshoot_piechart"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp" />-->
 
 
     </LinearLayout>

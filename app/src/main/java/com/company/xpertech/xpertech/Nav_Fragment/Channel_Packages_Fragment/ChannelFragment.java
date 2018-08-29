@@ -1,7 +1,9 @@
 package com.company.xpertech.xpertech.Nav_Fragment.Channel_Packages_Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,17 @@ import android.view.ViewGroup;
 import com.company.xpertech.xpertech.Method.Channels;
 import com.company.xpertech.xpertech.R;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +41,12 @@ public class ChannelFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private List<String> crystal_channelTitle;
     private List<String> diamond_channelTitle;
-    private List<Integer> crystal_channelNumber;
-    private List<Integer> diamond_channelNumber;
     private List<Channels> crystal_channel_list;
     private List<Channels> diamond_channel_list;
+
+    ArrayList<Channels> channelsList;
+
+    View view;
 
     private RecyclerView recyclerView;
 
@@ -69,114 +84,24 @@ public class ChannelFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_channel_list, container, false);
+        view = inflater.inflate(R.layout.fragment_channel_list, container, false);
 
         Bundle bundle = getArguments();
-        String packages = bundle.getString("package");
+        int packages = bundle.getInt("package");
 
-
-        crystal_channelTitle = new ArrayList<String>();
-        diamond_channelTitle = new ArrayList<String>();
-        crystal_channelNumber = new ArrayList<Integer>();
-        diamond_channelNumber = new ArrayList<Integer>();
-        crystal_channel_list = new ArrayList<Channels>();
-        diamond_channel_list = new ArrayList<Channels>();
-
-        crystal_channelTitle.add("ABS-CBN");
-        crystal_channelTitle.add("PTV");
-        crystal_channelTitle.add("TV5");
-        crystal_channelTitle.add("COMMUNITY CHANNEL");
-        crystal_channelTitle.add("GMA 7");
-        crystal_channelTitle.add("CINEMA ONE");
-        crystal_channelTitle.add("ISLAND LIVING CHANNEL");
-        crystal_channelTitle.add("JEEPNEY TV");
-        crystal_channelTitle.add("GNN");
-        crystal_channelTitle.add("IBC 13");
-        crystal_channelTitle.add("PAY-PER-VIEW");
-        crystal_channelTitle.add("HOPE INTERNATIONAL");
-        crystal_channelTitle.add("CNN PHILIPPINES");
-        crystal_channelTitle.add("GMA NEWS TV");
-        crystal_channelTitle.add("SPORTS + ACTION");
-        crystal_channelTitle.add("DZMM TELERADIO");
-        crystal_channelTitle.add("DZRH NEWS");
-        crystal_channelTitle.add("KNOWLEDGE CHANNEL");
-        crystal_channelTitle.add("LIVING ASIA");
-        crystal_channelTitle.add("DIVA");
-        crystal_channelTitle.add("HBO");
-        crystal_channelTitle.add("FOX MOVIES");
-        crystal_channelTitle.add("CINEMAX");
-        crystal_channelTitle.add("LOTUS MACAU");
-        crystal_channelTitle.add("FOX FAMILY MOVIES");
-        crystal_channelTitle.add("AKSYON TV");
-        crystal_channelTitle.add("FOX LIFE");
-        crystal_channelTitle.add("WARNER TV");
-        crystal_channelTitle.add("CARTOON NETWORK");
-        crystal_channelTitle.add("YEYI");
-        crystal_channelTitle.add("JACK TV");
-        crystal_channelTitle.add("ANIMAX");
-        crystal_channelTitle.add("DISNEY CHANNEL");
-        crystal_channelTitle.add("NICKELODEON");
-        crystal_channelTitle.add("SOLAR SPORTS");
-        crystal_channelTitle.add("FOX SPORTS");
-        crystal_channelTitle.add("FOX SPORTS 2");
-        crystal_channelTitle.add("BTV");
-        crystal_channelTitle.add("TRT WORLD");
-        crystal_channelTitle.add("AKLASS  TWO");
-        crystal_channelTitle.add("DUBAI SPORTS");
-        crystal_channelTitle.add("I24 NEWS");
-        crystal_channelTitle.add("CNN INTERNATIONAL");
-        crystal_channelTitle.add("BBC");
-        crystal_channelTitle.add("CHANNEL NEWS ASIA");
-        crystal_channelTitle.add("BLOOMBERG");
-        crystal_channelTitle.add("AL JAZEERA INT'L");
-        crystal_channelTitle.add("ANC");
-        crystal_channelTitle.add("CGTN");
-
-
-        diamond_channelTitle.add("TVN");
-        diamond_channelTitle.add("FOX CHANNEL");
-        diamond_channelTitle.add("FOX NEWS");
-        diamond_channelTitle.add("FOX CRIME");
-        diamond_channelTitle.add("FX");
-        diamond_channelTitle.add("ANIMAL PLANET");
-        diamond_channelTitle.add("DISCOVERY WORLD");
-        diamond_channelTitle.add("SETANTA SPORTS");
-        diamond_channelTitle.add("SONY CHANNEL");
-        diamond_channelTitle.add("DISNEY JUNIOR");
-        diamond_channelTitle.add("HISTORY");
-        diamond_channelTitle.add("FYI,");
-        diamond_channelTitle.add("TRU TV");
-        diamond_channelTitle.add("AMC");
-        diamond_channelTitle.add("E!");
-        diamond_channelTitle.add("OUTDOOR CHANNEL");
-        diamond_channelTitle.add("NBA PREMIUM TV");
-
-        for (int i = 0; i < crystal_channelTitle.size(); i++){
-            Channels channels = new Channels(crystal_channelTitle.get(i));
-            crystal_channel_list.add(channels);
-        }
-        for (int i = 0; i < diamond_channelTitle.size(); i++){
-            Channels channels = new Channels(diamond_channelTitle.get(i));
-            diamond_channel_list.add(channels);
-        }
-        if(packages.equals("Crystal Package")){
-            // Set the adapter
-            if (view instanceof RecyclerView) {
-                Context context = view.getContext();
-                recyclerView = (RecyclerView) view;
-                recyclerView.setAdapter(new ChannelRecyclerView(crystal_channel_list, mListener));
-            }
-        }else {
-            // Set the adapter
-            if (view instanceof RecyclerView) {
-                Context context = view.getContext();
-                recyclerView = (RecyclerView) view;
-                recyclerView.setAdapter(new ChannelRecyclerView(diamond_channel_list, mListener));
-            }
-        }
-
+        channelsList = new ArrayList<Channels>();
+        ChannelFragment.ChannelTask channelTask = new ChannelFragment.ChannelTask(getContext());
+        channelTask.execute("channel", packages+"");
 
         return view;
+    }
+
+    void display(){
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            recyclerView = (RecyclerView) view;
+            recyclerView.setAdapter(new ChannelRecyclerView(channelsList, mListener));
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -216,5 +141,71 @@ public class ChannelFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class ChannelTask extends AsyncTask<String,Void,String> {
+        Context ctx;
+        AlertDialog alertDialog;
+
+        public ChannelTask(Context ctx)
+        {
+            this.ctx =ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String packages_url = "http://10.0.2.2/xpertech/channels.php";
+            String method = params[0];
+            if(method.equals("channel")){
+                String package_id = params[1];
+                try {
+                    URL url = new URL(packages_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("package_id","UTF-8")+"="+URLEncoder.encode(package_id,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String response = "";
+                    String line = "";
+                    line = bufferedReader.readLine();
+                    String[] name = line.split("\\$");
+                    for(int i = 0; i < name.length; i++)
+                    {
+                        channelsList.add(new Channels(name[i]));
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return response;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            display();
+        }
     }
 }

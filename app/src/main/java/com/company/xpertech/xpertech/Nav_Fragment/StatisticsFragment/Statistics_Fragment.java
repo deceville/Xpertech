@@ -1,8 +1,10 @@
 package com.company.xpertech.xpertech.Nav_Fragment.StatisticsFragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,6 +17,17 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +43,15 @@ public class Statistics_Fragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    int loginPCnt = 0;
+    int loginFCnt = 0;
+    int trobCnt = 0;
+    int callCnt = 0;
+    int cnt = 0;
+    String stat;
+    View view;
+    String ty;
 
 
 
@@ -72,44 +94,34 @@ public class Statistics_Fragment extends Fragment {
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_statistics_, container, false);
-
+    void login(){
         PieChart mChart;
-        String[] xValues = {"Successful Login", "Failed Login"};
+        String[] xValues = {"Pass", "Fail"};
 
         mChart = (PieChart)view.findViewById(R.id.login_piechart);
 
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(40, 0));
-        entries.add(new Entry(60, 0));
+        entries.add(new Entry(loginPCnt, 0));
+        entries.add(new Entry(loginFCnt, 0));
 
         PieDataSet dataSet =  new PieDataSet(entries, "");
         PieData data = new PieData(xValues, dataSet);
-        dataSet.setColors(new int[]{Color.BLUE, Color.WHITE});
+        dataSet.setColors(new int[]{Color.BLUE, Color.RED});
         dataSet.setSliceSpace(5f);
-        dataSet.setValueTextSize(20f);
+        dataSet.setValueTextSize(15f);
         mChart.setUsePercentValues(true);
         mChart.setDrawHoleEnabled(false);
         mChart.setData(data);
         mChart.invalidate();
+    }
 
-        xValues = new String[]{"Successful Troubleshoot", "Failed Troubleshoot"};
-        mChart = (PieChart)view.findViewById(R.id.troubleshoot_piechart);
-        entries = new ArrayList<>();
-        entries.add(new Entry(80, 0));
-        entries.add(new Entry(20, 0));
-        dataSet =  new PieDataSet(entries, "");
-        data = new PieData(xValues, dataSet);
-        dataSet.setColors(new int[]{Color.CYAN, Color.WHITE});
-        dataSet.setSliceSpace(5f);
-        dataSet.setValueTextSize(10f);
-        mChart.setUsePercentValues(true);
-        mChart.setDrawHoleEnabled(false);
-        mChart.setData(data);
-        mChart.invalidate();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_statistics_, container, false);
+
+        BackgroundTask loginPass = new BackgroundTask(getContext());
+        loginPass.execute("cnt");
 
         return view;
     }
@@ -152,4 +164,92 @@ public class Statistics_Fragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public class BackgroundTask extends AsyncTask<String, Void, String> {
+        AlertDialog alertDialog;
+        Context ctx;
+        public String boxNumber = null;
+
+        public BackgroundTask(Context ctx) {
+            this.ctx = ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("Login Information....");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String login_url = "http://10.0.2.2/xpertech/count.php";
+            String method = params[0];
+            if (method.equals("cnt")) {
+                try {
+                    URL url = new URL(login_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("pass", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("login", "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    String line = "";
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        loginPCnt = Integer.parseInt(line);
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    url = new URL(login_url);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("fail", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("login", "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        loginFCnt = Integer.parseInt(line);
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            login();
+        }
+    }
+
 }

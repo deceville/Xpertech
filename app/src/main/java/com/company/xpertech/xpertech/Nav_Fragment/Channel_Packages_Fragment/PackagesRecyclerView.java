@@ -49,8 +49,7 @@ public class PackagesRecyclerView extends RecyclerView.Adapter<PackagesRecyclerV
             public void onClick(View v) {
                 activity = (FragmentActivity) ctx;
                 Bundle bundle = new Bundle();
-                String packages = getPackage(position);
-                bundle.putString("package",   packages);
+                bundle.putInt("package",(position+1));
                 ChannelFragment channelf = new ChannelFragment();
                 channelf.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, channelf).addToBackStack("tag").commit();

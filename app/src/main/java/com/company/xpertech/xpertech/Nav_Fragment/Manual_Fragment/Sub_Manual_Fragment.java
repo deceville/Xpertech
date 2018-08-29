@@ -1,14 +1,30 @@
 package com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.company.xpertech.xpertech.R;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +43,9 @@ public class Sub_Manual_Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    View view;
+    TextView txt;
+    String sub = "";
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,8 +83,20 @@ public class Sub_Manual_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sub__manual_2, container, false);
+        view = inflater.inflate(R.layout.fragment_sub__manual_2, container, false);
+
+        txt = (TextView) view.findViewById(R.id.sub_manual_txt);
+        SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
+        String BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
+        BOX_NUMBER_SESSION = BOX_NUMBER_SESSION.replaceAll("\\s+","");
+
+        Bundle bundle = getArguments();
+        int position = bundle.getInt("position")+1;
+
+        Sub_Manual_Fragment.SubTask subTask = new Sub_Manual_Fragment.SubTask(getContext());
+        subTask.execute("sub_manual", position+"", BOX_NUMBER_SESSION);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +136,69 @@ public class Sub_Manual_Fragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class SubTask extends AsyncTask<String,Void,String> {
+        Context ctx;
+        AlertDialog alertDialog;
+
+        public SubTask(Context ctx)
+        {
+            this.ctx =ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String sub_url = "http://10.0.2.2/xpertech/usermanual_steps.php";
+            String method = params[0];
+            if(method.equals("sub_manual")){
+                String position = params[1];
+                String box_id = params[2];
+                try {
+                    //Retreiving Steps
+                    URL url = new URL(sub_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("position","UTF-8")+"="+URLEncoder.encode(position,"UTF-8");
+                    data += "&" + URLEncoder.encode("box_id","UTF-8")+"="+URLEncoder.encode(box_id,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String step_line = "";
+                    while ((step_line = bufferedReader.readLine()) != null)
+                        sub += "\n"+step_line;
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            txt.setText(sub);
+        }
     }
 }

@@ -1,10 +1,14 @@
 package com.company.xpertech.xpertech.Nav_Fragment.Self_Install_Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +17,18 @@ import android.widget.TextView;
 
 import com.company.xpertech.xpertech.Method.InstallAdapter;
 import com.company.xpertech.xpertech.Method.Sub_Manual;
-import com.company.xpertech.xpertech.R;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import static com.company.xpertech.xpertech.R.id;
@@ -39,6 +53,11 @@ public class Sub_Install_Fragment extends Fragment {
     private String mParam2;
     private static int position = 0;
     private Context ctx;
+
+    TextView textView;
+    ArrayList<Sub_Manual> subManual;
+    String title;
+    ListView listView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -83,54 +102,18 @@ public class Sub_Install_Fragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
+        String BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
+
         Bundle bundle = getArguments();
-        position = bundle.getInt("position");
-        ArrayList<Sub_Manual> subManual = new ArrayList<Sub_Manual>();
-        ListView listView = (ListView) view.findViewById(id.sub_install_list);
-        TextView textView = (TextView) view.findViewById(id.sub_install_name);
+        position = bundle.getInt("position")+1;
+        subManual = new ArrayList<Sub_Manual>();
+        listView = (ListView) view.findViewById(id.sub_install_list);
+        textView = (TextView) view.findViewById(id.sub_install_name);
 
-        switch(position){
-            case 0:
-                getActivity().setTitle("Unpacking");
-                textView.setText("\tYour service package selected determines the range of capabilities of your cable box." +
-                        "But for every service, the self-install kit should be inclusive of the following:");
-                subManual.add(new Sub_Manual("\t1.) Set Top Box (STB)", R.drawable.stb_q1_1));
-                subManual.add(new Sub_Manual("\t2.) Infrared remote control",R.drawable.stb_q1_2));
-                subManual.add(new Sub_Manual("\t3.) Battery",R.drawable.stb_q1_3));
-                subManual.add(new Sub_Manual("\t4.) Power Adapter",R.drawable.stb_q1_4));
-                subManual.add(new Sub_Manual("\t5.) Audio or Video Cable",R.drawable.stb_q1_5));
-                subManual.add(new Sub_Manual("\t6.) Video Graphics Array (VGA) Cable",R.drawable.stb_q1_6));
-                subManual.add(new Sub_Manual("\t7.) Coax Cable",R.drawable.stb_q1_7));
-                subManual.add(new Sub_Manual("\t8.) User Guide",0));
-                break;
-            case 1:
-                getActivity().setTitle("Plugging In");
-                textView.setText("\tThis Self-install guide are for those who wanted to set the installation on their own, " +
-                        "assuming that the subscribers' outside connections are all set.");
-                subManual.add(new Sub_Manual("\t1.) Screw Coax Cable from wall outlet to the back of the cable box.", R.drawable.stb_q2_1));
-                subManual.add(new Sub_Manual("\t2.) If box is HD capable, connect the VGA cable from the VGA slot at the back of the box to the respective VGA outlet on your TV." +
-                        "If the box is 'not' HD capable, connect the other coaxial cable from the cable box to your TV.",R.drawable.stb_q2_2));
-                subManual.add(new Sub_Manual("\t3.) Connect the power cable into the back of the Set Top Box to the power outlet.",R.drawable.stb_q2_3));
-                break;
-            case 2:
-                getActivity().setTitle("Powering up the box");
-                subManual.add(new Sub_Manual("1.)  When all connections said are all set, turn ON the power on your cable box by pressing the Power Button " +
-                        "in the front end of your box or Press the Power Button on your cable box Remote Control", R.drawable.stb_q3_1));
-                subManual.add(new Sub_Manual("2.) If you connected your cable box to your TV with coaxial cables, Turn your TV Channel to Channel 2 to see if you got picture. " +
-                        "If not, turn your TV to Channels 3 or 4 until you got picture. " +
-                        "If you connected HDMI cable from the box to your TV, check the Channel sourcing of your TV and make sure it is tuned in to " +
-                        "the appropriate HDMI mode where you connected your HDMI cable at. Either HDMI 1 or HDMI 2, etc\\",R.drawable.stb_q3_2));
-                break;
-            case 3:
-                getActivity().setTitle("Support and Activating Service");
-                subManual.add(new Sub_Manual("1.)  If you are able to see pictures already, congratulations! You have successfully set your cable service up! If you are still having issues, visit our website at " +
-                        "www.newbacolodcabletv.com or call us at (034) 445-8514 or message us directly on Facebook at New Bacolod CableTV.", R.drawable.stb_q4_1));
-                subManual.add(new Sub_Manual("2.) If your service is not yet activated, call our direct hotline at (034) 445-8514.",0));
-                break;
-        }
-
-        InstallAdapter installAdapter = new InstallAdapter(subManual, ctx);
-        listView.setAdapter(installAdapter);
+        Sub_Install_Fragment.SubInstallTask sit = new Sub_Install_Fragment.SubInstallTask(getContext());
+        sit.execute("selfinstall_steps", position+"", BOX_NUMBER_SESSION);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -158,18 +141,136 @@ public class Sub_Install_Fragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    public class SubInstallTask extends AsyncTask<String,Void,String> {
+        Context ctx;
+        AlertDialog alertDialog;
+
+        public SubInstallTask(Context ctx)
+        {
+            this.ctx =ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String install_url = "http://10.0.2.2/xpertech/selfinstall_steps.php";
+            String title_url = "http://10.0.2.2/xpertech/selfinstall_title.php";
+            String img_url = "http://10.0.2.2/xpertech/selfinstall_image.php";
+            String method = params[0];
+            if(method.equals("selfinstall_steps")){
+                String selfinstall_id = params[1];
+                String box_id = params[2];
+                try {
+                    //Retreiving Steps
+                    URL url = new URL(install_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("selfinstall_id","UTF-8")+"="+URLEncoder.encode(selfinstall_id,"UTF-8");
+                    data += "&" + URLEncoder.encode("box_id","UTF-8")+"="+URLEncoder.encode(box_id,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String step_line = "";
+                    step_line = bufferedReader.readLine();
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    //Retreiving Images
+                    url = new URL(img_url);
+                    httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    data = URLEncoder.encode("selfinstall_id","UTF-8")+"="+URLEncoder.encode(selfinstall_id,"UTF-8");
+                    data += "&" + URLEncoder.encode("box_id","UTF-8")+"="+URLEncoder.encode(box_id,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String image_line = "";
+                    image_line = bufferedReader.readLine();
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    String[] step = step_line.split("\\$");
+                    String[] image = image_line.split("\\$");
+                    for (int i = 0; i < step.length; i++) {
+                        int img = 0;
+                        Log.d("IMG",""+image[i]);
+                        if (image[i] != "0") {
+                            img = getResources().getIdentifier(image[i].replaceAll("\\s+",""), "drawable", ctx.getPackageName());
+                        }
+                        subManual.add(new Sub_Manual("\t"+(i+1)+".) "+step[i], img));
+                    }
+
+                    //Retreiving title
+                    url = new URL(title_url);
+                    httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    data = URLEncoder.encode("selfinstall_id","UTF-8")+"="+URLEncoder.encode(selfinstall_id,"UTF-8");
+                    data += "&" + URLEncoder.encode("box_id","UTF-8")+"="+URLEncoder.encode(box_id,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String title_line = "";
+                    title_line = bufferedReader.readLine();
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    title = title_line;
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            InstallAdapter installAdapter = new InstallAdapter(subManual, ctx);
+            listView.setAdapter(installAdapter);
+            if(title != null) {
+                textView.setText(title);
+            }
+        }
     }
 }

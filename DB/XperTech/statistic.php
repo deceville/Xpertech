@@ -1,8 +1,11 @@
  <?php  
  require "init.php";  
  $type = $_POST["type"];  
- $value = $_POST["value"]
- $id = $_POST["id"]
- $sql_query = "insert into stat_info values('$type','$value','$id');";   
- $result = mysqli_query($con,$sql_query);  
+ $status = $_POST["status"];
+ $ownership = $_POST["ownership"];
+ $sql_query = "INSERT INTO stat_info(type,status,ownership) values('$type','$status','$ownership');";
+
+ mysqli_query($con,$sql_query);  
+
+ echo "Success";
  ?> 

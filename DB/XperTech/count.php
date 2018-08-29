@@ -1,14 +1,14 @@
 <?php  
  require "init.php";  
- $position = $_POST["position"];
- $box_id = $_POST["box_id"];
- $sql_query = "SELECT manual_desc from manual_step where position = '$position' and box_id = '$box_id';";  
+ $status = $_POST["status"];
+ $type = $_POST["type"];
+ $sql_query = "SELECT COUNT(stat_id) AS result FROM stat_info WHERE status = '$status' AND type = '$type';";  
  $result = mysqli_query($con,$sql_query); 
  $array = array();
  $index = 0;
  if(mysqli_num_rows($result) > 0 ) {  
 	 while ($row = mysqli_fetch_assoc($result)) {
-	 	$array[$index] = $row['manual_desc'];
+	 	$array[$index] = $row['result'];
 	 	$index++;
 	 }
 	 $manual_steps_desc = implode("$", $array);

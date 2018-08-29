@@ -1,7 +1,8 @@
 <?php  
  require "init.php";  
  $selfinstall_id = $_POST["selfinstall_id"];
- $sql_query = "select install_steps_desc from troubleshoot_steps where selfinstall_id = '$selfinstall_id';";  
+ $box_id = $_POST["box_id"];
+ $sql_query = "select install_steps_desc from selfinstall_steps where selfinstall_id = '$selfinstall_id' AND box_id = '$box_id';";  
  $result = mysqli_query($con,$sql_query); 
  $array = array();
  $index = 0;

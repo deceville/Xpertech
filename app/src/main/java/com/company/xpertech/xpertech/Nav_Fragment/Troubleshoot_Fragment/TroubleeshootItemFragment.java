@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.company.xpertech.xpertech.Method.Task;
 import com.company.xpertech.xpertech.R;
 
 import java.io.BufferedReader;
@@ -64,6 +66,7 @@ public class TroubleeshootItemFragment extends Fragment {
     GifImageView gif;
 
     String BOX_NUMBER_SESSION;
+    String USER_SESSION;
 
     private OnFragmentInteractionListener mListener;
 
@@ -99,25 +102,33 @@ public class TroubleeshootItemFragment extends Fragment {
 
         Bundle bundle = getArguments();
         position = bundle.getInt("position")+1;
-        BOX_NUMBER_SESSION = bundle.getString("BOX_NUMBER_SESSION");
+
+        SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
+        BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
+        BOX_NUMBER_SESSION = BOX_NUMBER_SESSION.replaceAll("\\s+","");
+        USER_SESSION = s.getString("USER_SESSION", "USER_SESSION");
+
         troubleshootArrayList= new ArrayList<Troubleshoot>();
         SubMenuTask subMenuTask = new SubMenuTask(getContext());
-        subMenuTask.execute("troubleshoot_steps", position+"");
+        subMenuTask.execute("stat","troubleshoot_steps", position+"",BOX_NUMBER_SESSION);
         Log.d("SIZE", troubleshootArrayList.size()+"");
     }
 
     public void next(final int index){
         TextView txt = (TextView) this.view.findViewById(R.id.item_text);
         Troubleshoot troubleshoot = troubleshootArrayList.get(index);
+        int img = 0;
         if (position == 2){
-            gif.setImageResource(R.drawable.remote);
+            img = R.drawable.remote;
         }else if (position == 3){
-            gif.setImageResource(R.drawable.greenled);
+            img = R.drawable.greenled;
         }else if (position == 4){
-            gif.setImageResource(R.drawable.audiovideo);
+            img = (R.drawable.audiovideo);
         }else if (position == 5){
-            gif.setImageResource(R.drawable.coxial);
+            img = (R.drawable.coxial);
         }
+        Log.d("IMG",""+img);
+        gif.setImageResource(img);
         txt.setText(troubleshoot.getInstruct());
     }
 
@@ -153,10 +164,9 @@ public class TroubleeshootItemFragment extends Fragment {
                             next(cnt);
                         } else {
                             troubleshootArrayList = new ArrayList<Troubleshoot>();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                             TroubleshootFragment tf = new TroubleshootFragment();
-                            tf.setArguments(bundle);
+                            Task task = new Task();
+                            task.execute("stat", "troubleshoot", "pass", USER_SESSION);
                             actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                         }
                     }
@@ -168,6 +178,8 @@ public class TroubleeshootItemFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         d.dismiss();
+                        Task task = new Task();
+                        task.execute("stat", "troubleshoot", "fail", USER_SESSION);
                         dialog_text.setText("Would you like to call customer service now?");
                         d.show();
                         btn_back.setOnClickListener(new View.OnClickListener(){
@@ -178,16 +190,15 @@ public class TroubleeshootItemFragment extends Fragment {
                                 callIntent.setData(Uri.parse("tel:4458514"));
 
                                 if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    Task task = new Task();
+                                    task.execute("stat","call", "pass", USER_SESSION);
                                     startActivity(callIntent);
                                 } else {
                                     requestPermissions(new String[]{CALL_PHONE}, 1);
                                 }
                                 troubleshootArrayList = new ArrayList<Troubleshoot>();
                                 d.dismiss();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                                 TroubleshootFragment tf = new TroubleshootFragment();
-                                tf.setArguments(bundle);
                                 actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                             }
                         });
@@ -196,11 +207,10 @@ public class TroubleeshootItemFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 d.dismiss();
+                                Task task = new Task();
+                                task.execute("stat","call", "fail", USER_SESSION);
                                 troubleshootArrayList = new ArrayList<Troubleshoot>();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
                                 TroubleshootFragment tf = new TroubleshootFragment();
-                                tf.setArguments(bundle);
                                 actvty.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, tf).commit();
                             }
                         });
@@ -274,12 +284,16 @@ public class TroubleeshootItemFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String troubleshoot_url = "http://10.0.2.2/xpertech/troubleshoot_steps.php";
+            String install_url = "http://10.0.2.2/xpertech/troubleshoot_steps.php";
+            String title_url = "http://10.0.2.2/xpertech/selfinstall_title.php";
+            String img_url = "http://10.0.2.2/xpertech/selfinstall_image.php";
             String method = params[0];
             if(method.equals("troubleshoot_steps")){
                 String troubleshoot_id = params[1];
+                String box_id = params[2];
                 try {
-                    URL url = new URL(troubleshoot_url);
+                    //Retreiving Steps
+                    URL url = new URL(install_url);
                     HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setDoOutput(true);
@@ -287,13 +301,13 @@ public class TroubleeshootItemFragment extends Fragment {
                     OutputStream outputStream = httpURLConnection.getOutputStream();
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
                     String data = URLEncoder.encode("troubleshoot_id","UTF-8")+"="+URLEncoder.encode(troubleshoot_id,"UTF-8");
+                    data += "&" + URLEncoder.encode("box_id","UTF-8")+"="+URLEncoder.encode(box_id,"UTF-8");
                     bufferedWriter.write(data);
                     bufferedWriter.flush();
                     bufferedWriter.close();
                     outputStream.close();
                     InputStream inputStream = httpURLConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String response = "";
                     String line = "";
                     line = bufferedReader.readLine();
 
@@ -305,7 +319,6 @@ public class TroubleeshootItemFragment extends Fragment {
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();
-                    return response;
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -324,7 +337,5 @@ public class TroubleeshootItemFragment extends Fragment {
         protected void onPostExecute(String result) {
             next(cnt);
         }
-
-
     }
 }

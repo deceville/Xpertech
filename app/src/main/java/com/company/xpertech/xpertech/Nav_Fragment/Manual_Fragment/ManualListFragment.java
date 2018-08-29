@@ -1,7 +1,10 @@
 package com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +16,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.company.xpertech.xpertech.R;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +50,7 @@ public class ManualListFragment extends Fragment {
     Context ctx;
     FragmentActivity ft;
     ListView listView;
+    String items[];
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,9 +92,24 @@ public class ManualListFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_manual_list, container, false);
 
-        String[] items = {"1.0 Introduction", "2.0 Your Receiver", "3.0 Connection", "4.0 Starting Up For The First Time",
-                "5.0 Quick Guide To Using Your Receiver", "6.0 Operation", "7.0 Main Menu", ""};
+        SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
+        String BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
+        ManualListFragment.MenuTask menuTask = new ManualListFragment.MenuTask(getContext());
+        menuTask.execute("usermanual", BOX_NUMBER_SESSION);
 
+//        items = new String[]{"1.0 Introduction", "2.0 Your Receiver", "3.0 Connection", "4.0 Starting Up For The First Time",
+//                "5.0 Quick Guide To Using Your Receiver", "6.0 Operation", "7.0 Main Menu", ""};
+        return view;
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    void display(){
         listView = (ListView) view.findViewById(R.id.manual_list);
 
         ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(
@@ -102,15 +133,6 @@ public class ManualListFragment extends Fragment {
                 ft.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, smf).addToBackStack("tag").commit();
             }
         });
-
-        return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -144,5 +166,69 @@ public class ManualListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class MenuTask extends AsyncTask<String,Void,String> {
+        Context ctx;
+        AlertDialog alertDialog;
+
+        public MenuTask(Context ctx)
+        {
+            this.ctx =ctx;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new AlertDialog.Builder(ctx).create();
+            alertDialog.setTitle("");
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String manual_url = "http://10.0.2.2/xpertech/usermanual.php";
+            String method = params[0];
+            if(method.equals("usermanual")){
+                String box_number = params[1];
+                try {
+                    URL url = new URL(manual_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String response = "";
+                    String line = "";
+                    line = bufferedReader.readLine();
+                    String[] title = line.split("\\$");
+                    items = new String[title.length];
+                    items = title;
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return response;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            display();
+        }
     }
 }

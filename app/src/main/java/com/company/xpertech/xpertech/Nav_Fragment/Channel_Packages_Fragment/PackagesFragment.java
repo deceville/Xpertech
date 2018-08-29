@@ -18,16 +18,12 @@ import com.company.xpertech.xpertech.Method.Packages;
 import com.company.xpertech.xpertech.R;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -54,6 +50,8 @@ public class PackagesFragment extends Fragment {
     static String BOX_NUMBER_SESSION;
     static Bundle BUNDLE_SESSION;
     RecyclerView recyclerView;
+
+    View view;
 
     public PackagesFragment() {
         // Required empty public constructor
@@ -83,11 +81,9 @@ public class PackagesFragment extends Fragment {
         BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
         BUNDLE_SESSION = getArguments();
         //BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
-        String method = "package";
+
 
         Log.d("BOX_NUMBER_SESSION",BOX_NUMBER_SESSION);
-        MenuTask menuTask = new MenuTask(getContext());
-        menuTask.execute(method, BOX_NUMBER_SESSION);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -100,32 +96,16 @@ public class PackagesFragment extends Fragment {
         // Inflate the layout for this fragment
         getActivity().setTitle("Packages and Channel Lineup");
 
-        final View view = inflater.inflate(R.layout.fragment_packages_list, container, false);
-        packageTitle = new ArrayList<String>();
-        packageChannel = new ArrayList<String>();
+        view = inflater.inflate(R.layout.fragment_packages_list, container, false);
         packagesList = new ArrayList<Packages>();
 
+        String method = "package";
+        MenuTask menuTask = new MenuTask(getContext());
+        menuTask.execute(method);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-        }
 
         return view;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.OnListFragmentInteractionListener(uri);
-        }
-    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -178,28 +158,23 @@ public class PackagesFragment extends Fragment {
             String packages_url = "http://10.0.2.2/xpertech/packages.php";
             String method = params[0];
             if(method.equals("package")){
-                String box_number = params[1];
                 try {
                     URL url = new URL(packages_url);
                     HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
                     httpURLConnection.setRequestMethod("POST");
                     httpURLConnection.setDoOutput(true);
                     httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
                     InputStream inputStream = httpURLConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
                     String response = "";
                     String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
+                    line = bufferedReader.readLine();
+
+                    String[] title = line.split("\\$");
+                    for (int i = 0; i < title.length; i++) {
+                        packagesList.add(new Packages(title[i]));
                     }
+
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();
@@ -219,32 +194,18 @@ public class PackagesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            String[] title = result.split("\\$");
-            for (int i = 0; i < title.length; i++) {
-                packageTitle.add(title[i]);
-            }
-            /*String [] items = new String[2];
-            for (int i = 0; i < title.length; i++) {
-                items = title[i].split("\\,");
+            if (view instanceof RecyclerView) {
+                Context context = view.getContext();
+                recyclerView = (RecyclerView) view;
+                if (mColumnCount <= 1) {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                } else {
+                    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                }
             }
 
-            packageTitle.add(items[0]);
-            packageChannel.add(items[1]);
-
-            Log.d("packageTitle",items[0]);
-            Log.d("packageChannel",items[1]);*/
-            for (int i = 0; i < packageTitle.size(); i++){
-                Packages packages = new Packages(packageTitle.get(i));
-                packagesList.add(packages);
-            }
             recyclerView.setAdapter(new PackagesRecyclerView(packagesList, mListener));
         }
-        /*Message msg = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList("title_list", title_list);
-        msg.setData(bundle);
-        Handler handler = new Handler();
-        handler.sendMessage(msg);*/
 
 
     }

@@ -54,6 +54,7 @@ public class SelfInstallFragment extends Fragment {
     private Context ctx;
     private FragmentActivity ft;
     String[] install;
+    ArrayAdapter<String> listViewAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -104,14 +105,19 @@ public class SelfInstallFragment extends Fragment {
         getActivity().setTitle("Self Install");
         view = inflater.inflate(R.layout.fragment_self_install, container, false);
 
-        String[] manualItems = {"Unpacking", "Plugging In", "Powering up the Box", "Support and Activating Service"};
+        return view;
+    }
 
+    void display(){
         listView = (ListView) view.findViewById(R.id.listview_manual);
 
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(
+        if(install.length == 0)
+            install = new String[]{"Unpacking"};
+
+        listViewAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
-                manualItems
+                install
         );
 
         listView.setAdapter(listViewAdapter);
@@ -129,8 +135,6 @@ public class SelfInstallFragment extends Fragment {
                 ft.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, sif).addToBackStack("tag").commit();
             }
         });
-
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -193,40 +197,7 @@ public class SelfInstallFragment extends Fragment {
             String selfinstall_url = "http://10.0.2.2/xpertech/selfinstall.php";
             String usermanual_url = "http://10.0.2.2/xpertech/usermanual.php";
             String method = params[0];
-            if(method.equals("troubleshoot")){
-                String box_number = params[1];
-                try {
-                    URL url = new URL(troubleshoot_url);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String response = "";
-                    String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return response;
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else if(method.equals("selfinstall")){
+            if(method.equals("selfinstall")){
                 String box_number = params[1];
                 try {
                     URL url = new URL(selfinstall_url);
@@ -245,43 +216,10 @@ public class SelfInstallFragment extends Fragment {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
                     String response = "";
                     String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return response;
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else if(method.equals("usermanual")){
-                String box_number = params[1];
-                try {
-                    URL url = new URL(usermanual_url);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String response = "";
-                    String line = "";
-                    while ((line = bufferedReader.readLine())!=null)
-                    {
-                        response += line;
-                    }
+                    line = bufferedReader.readLine();
+                    String[] title = line.split("\\$");
+                    install = new String[title.length];
+                    install = title;
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();
@@ -301,9 +239,7 @@ public class SelfInstallFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            String[] title = result.split("\\$");
-            install = new String[title.length];
-            install = title;
+            display();
         }
     }
 }

@@ -188,8 +188,11 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new AboutXpertechFragment()).addToBackStack("tag").commit();
                 break;
             case R.id.nav_logout:
+                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+                startActivity(intent);
                 finish();
-                System.exit(0);
+                break;
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

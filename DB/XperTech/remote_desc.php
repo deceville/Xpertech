@@ -1,16 +1,17 @@
 <?php  
  require "init.php";  
- $sql_query = "SELECT package_name FROM packages ";  
+ $remote_detail_id = $_POST["remote_detail_id"];
+ $sql_query = "SELECT remote_desc FROM remote_detail WHERE remote_detail_id = '$remote_detail_id';";  
  $result = mysqli_query($con,$sql_query); 
  $array = array();
  $index = 0;
  if(mysqli_num_rows($result) > 0 ) {  
 	 while ($row = mysqli_fetch_assoc($result)) {
-	 	$array[$index] = $row['package_name'];
+	 	$array[$index] = $row['remote_desc'];
 	 	$index++;
 	 }
-	 $package_title = implode("$", $array);
-	 echo $package_title;
+	 $selfinstall_title = implode("$", $array);
+	 echo $selfinstall_title;
  }  
  else  
  {   
