@@ -155,7 +155,7 @@ public class PackagesFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String packages_url = "http://10.0.2.2/xpertech/packages.php";
+            String packages_url = "https://uslsxpertech.000webhostapp.com/xpertech/packages.php";
             String method = params[0];
             if(method.equals("package")){
                 try {

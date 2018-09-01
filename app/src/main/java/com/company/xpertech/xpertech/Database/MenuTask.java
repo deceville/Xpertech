@@ -43,9 +43,9 @@ public class MenuTask extends AsyncTask<String,Void,String> {
     }
     @Override
     protected String doInBackground(String... params) {
-        String troubleshoot_url = "http://10.0.2.2/xpertech/troubleshoot.php";
-        String selfinstall_url = "http://10.0.2.2/xpertech/selfinstall.php";
-        String usermanual_url = "http://10.0.2.2/xpertech/usermanual.php";
+        String troubleshoot_url = "https://uslsxpertech.000webhostapp.com/xpertech/troubleshoot.php";
+        String selfinstall_url = "https://uslsxpertech.000webhostapp.com/xpertech/selfinstall.php";
+        String usermanual_url = "https://uslsxpertech.000webhostapp.com/xpertech/usermanual.php";
         String method = params[0];
         if(method.equals("troubleshoot")){
             String box_number = params[1];

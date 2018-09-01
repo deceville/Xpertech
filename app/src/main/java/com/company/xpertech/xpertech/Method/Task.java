@@ -22,7 +22,7 @@ import java.net.URLEncoder;
 public class Task extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
-        String urls = "http://10.0.2.2/xpertech/statistic.php";
+        String urls = "https://uslsxpertech.000webhostapp.com/xpertech/statistic.php";
         String method = params[0];
         if (method.equals("stat")) {
             String type = params[1];

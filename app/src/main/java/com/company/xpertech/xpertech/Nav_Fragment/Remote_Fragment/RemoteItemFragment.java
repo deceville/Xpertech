@@ -175,7 +175,7 @@ public class RemoteItemFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String remote_detail_url = "http://10.0.2.2/xpertech/remote_detail.php";
+            String remote_detail_url = "https://uslsxpertech.000webhostapp.com/xpertech/remote_detail.php";
             String method = params[0];
             if(method.equals("remote_detail")){
                 try {
@@ -231,8 +231,8 @@ public class RemoteItemFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String remote_desc_url = "http://10.0.2.2/xpertech/remote_desc.php";
-            String remote_img_url = "http://10.0.2.2/xpertech/remote_img.php";
+            String remote_desc_url = "https://uslsxpertech.000webhostapp.com/xpertech/remote_desc.php";
+            String remote_img_url = "https://uslsxpertech.000webhostapp.com//xpertech/remote_img.php";
             String method = params[0];
             String remote_detail_id = params[1];
             if(method.equals("remote_desc")){

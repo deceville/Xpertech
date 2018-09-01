@@ -35,9 +35,9 @@ public class SubMenuTask extends AsyncTask<String,Void,String> {
     }
     @Override
     protected String doInBackground(String... params) {
-        String troubleshoot_steps_url = "http://10.0.2.2/xpertech/troubleshoot_steps.php";
-        String selfinstall_steps_url = "http://10.0.2.2/xpertech/selfinstall_steps.php";
-        String usermanual_steps_url = "http://10.0.2.2/xpertech/usermanual_steps.php";
+        String troubleshoot_steps_url = "https://uslsxpertech.000webhostapp.com/xpertech/troubleshoot_steps.php";
+        String selfinstall_steps_url = "https://uslsxpertech.000webhostapp.com//xpertech/selfinstall_steps.php";
+        String usermanual_steps_url = "https://uslsxpertech.000webhostapp.com/xpertech/usermanual_steps.php";
         String method = params[0];
         if(method.equals("troubleshoot")){
             String troubleshoot_id = params[1];

@@ -184,7 +184,7 @@ public class ManualListFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String manual_url = "http://10.0.2.2/xpertech/usermanual.php";
+            String manual_url = "https://uslsxpertech.000webhostapp.com/xpertech/usermanual.php";
             String method = params[0];
             if(method.equals("usermanual")){
                 String box_number = params[1];

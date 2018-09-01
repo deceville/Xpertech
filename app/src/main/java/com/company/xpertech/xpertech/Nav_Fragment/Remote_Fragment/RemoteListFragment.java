@@ -173,7 +173,7 @@ public class RemoteListFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String remote_url = "http://10.0.2.2/xpertech/remote.php";
+            String remote_url = "https://uslsxpertech.000webhostapp.com/xpertech/remote.php";
             String method = params[0];
             if(method.equals("remote")){
                 try {

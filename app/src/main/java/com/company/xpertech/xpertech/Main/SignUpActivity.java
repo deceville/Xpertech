@@ -11,11 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.company.xpertech.xpertech.AppEULA;
@@ -50,13 +49,10 @@ public class SignUpActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String BOX_NUMBER_SESSION;
     String USER_SESSION;
+    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
 
     boolean read = false;
-
-    TextView qr_details;
     Intent intent;
-
-    Button btn_enter;
 
     final int RequestCameraPermissionID = 1001;
 
@@ -64,49 +60,15 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Show EULA
-
         new AppEULA(this).show();
 
         setContentView(R.layout.activity_scan_qr);
 
         sharedPref = getSharedPreferences("values", Context.MODE_PRIVATE);
 
-        //Open Enter Code Activity
         qr_result = (TextView) findViewById(R.id.qr_result);
-//btn_enter = (Button) findViewById(R.id.btn_enter);
-       // final String result = "10011000000001";
-      //  final String BOX_NUMBER_SESSION = "1001";
-      //  btn_enter.setOnClickListener(new View.OnClickListener() {
-     //       @Override
-      //      public void onClick(View v) {
 
-                 //Pass box number to mainString method = "login";
-      //          BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-    //            backgroundTask.execute("login", result);
-
-//                intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-//                startActivity(intent);
-
-       //         editor = sharedPref.edit();
-       //         editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-       //         editor.commit();
-
-                //startActivity(intent);
-
-//                editor = sharedPref.edit();
-//                editor.putString("boxNumber", "1001");
-//                editor.commit();
-//                //intent.putExtra("boxNumber", boxNumber);
-//                finish();
-
-            //    Task task = new Task();
-            //    task.execute("stat","login", "pass", result);
-            //    intent = new Intent(SignUpActivity.this, MainActivity.class);
-            //    startActivity(intent);
-          // }
-       // });
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
-        //txtResult = (TextView) findViewById(R.id.txtResult);
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.QR_CODE)
@@ -153,19 +115,15 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                String result = qrcodes.valueAt(0).displayValue;
-                USER_SESSION = result;
-                //String result = "10011000000001";
-                if (qrcodes.size() != 0) {
-                    String method = "login";
-                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
-                    backgroundTask.execute(method, result);
+                String result = "0";
+
+                if(qrcodes.size() != 0){
+                    result = qrcodes.valueAt(0).displayValue;
+                    USER_SESSION = result;
+                    backgroundTask.execute("login", result);
                 }
-                else
-                {
-                    Task task = new Task();
-                    task.execute("stat", "login", "fail", "0");
-                }
+
+                Log.d("QR", result);
             }
         });
 
@@ -202,13 +160,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            alertDialog = new AlertDialog.Builder(ctx).create();
-            alertDialog.setTitle("Login Information....");
+            
         }
 
         @Override
         protected String doInBackground(String... params) {
-            String login_url = "http://10.0.2.2/xpertech/login.php";
+            String login_url = "http://uslsxpertech.000webhostapp.com/xpertech/login.php";
             String method = params[0];
             if (method.equals("login")) {
                 String accountNumber = params[1];
@@ -227,15 +184,13 @@ public class SignUpActivity extends AppCompatActivity {
                     outputStream.close();
                     InputStream inputStream = httpURLConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                    String response = "";
                     String line = "";
-                    while ((line = bufferedReader.readLine()) != null) {
-                        response += line;
-                    }
+                    line = bufferedReader.readLine();
+                    String[] response = line.split("\\,");
+                    BOX_NUMBER_SESSION = response[0];
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();
-                    return response;
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -252,31 +207,29 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            String[] line = result.split("\\,");
-            BOX_NUMBER_SESSION = line[0];
+            sign_up();
+        }
+    }
 
-            intent = new Intent(getBaseContext(), MainActivity.class);
-//            intent.putExtra("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-//            finish();
+    void sign_up(){
+        if(BOX_NUMBER_SESSION != null) {
+            //Statistics
+            Task task = new Task();
+            task.execute("stat", "login", "pass", USER_SESSION);
 
+            //Session
             editor = sharedPref.edit();
             editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
             editor.putString("USER_SESSION", USER_SESSION);
             editor.commit();
 
             intent = new Intent(getBaseContext(), MainActivity.class);
-
-            if(USER_SESSION != null) {
-                Task task = new Task();
-                task.execute("stat", "login", "pass", USER_SESSION);
-            }
-            else {
-                Task task = new Task();
-                task.execute("stat", "login", "fail", "0");
-            }
-
             startActivity(intent);
-            //intent.putExtra("boxNumber", boxNumber);
+            finish();
+        }
+        else {
+            Task task = new Task();
+            task.execute("stat", "login", "fail", "0");
         }
     }
 

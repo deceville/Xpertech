@@ -159,7 +159,7 @@ public class ChannelFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String packages_url = "http://10.0.2.2/xpertech/channels.php";
+            String packages_url = "https://uslsxpertech.000webhostapp.com/xpertech/channels.php";
             String method = params[0];
             if(method.equals("channel")){
                 String package_id = params[1];

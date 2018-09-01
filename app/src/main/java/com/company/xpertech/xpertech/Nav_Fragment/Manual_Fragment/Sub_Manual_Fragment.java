@@ -154,7 +154,7 @@ public class Sub_Manual_Fragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String sub_url = "http://10.0.2.2/xpertech/usermanual_steps.php";
+            String sub_url = "https://uslsxpertech.000webhostapp.com/xpertech/usermanual_steps.php";
             String method = params[0];
             if(method.equals("sub_manual")){
                 String position = params[1];

@@ -284,9 +284,9 @@ public class TroubleeshootItemFragment extends Fragment {
         }
         @Override
         protected String doInBackground(String... params) {
-            String install_url = "http://10.0.2.2/xpertech/troubleshoot_steps.php";
-            String title_url = "http://10.0.2.2/xpertech/selfinstall_title.php";
-            String img_url = "http://10.0.2.2/xpertech/selfinstall_image.php";
+            String install_url = "https://uslsxpertech.000webhostapp.com/xpertech/troubleshoot_steps.php";
+            String title_url = "https://uslsxpertech.000webhostapp.com/xpertech/selfinstall_title.php";
+            String img_url = "https://uslsxpertech.000webhostapp.com/xpertech/selfinstall_image.php";
             String method = params[0];
             if(method.equals("troubleshoot_steps")){
                 String troubleshoot_id = params[1];
