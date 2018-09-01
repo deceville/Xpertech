@@ -1,6 +1,8 @@
 package com.company.xpertech.xpertech.Main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.company.xpertech.xpertech.Method.Packages;
+import com.company.xpertech.xpertech.Method.Task;
 import com.company.xpertech.xpertech.Method.Troubleshoot;
 import com.company.xpertech.xpertech.Nav_Fragment.AboutNBCFragment;
 import com.company.xpertech.xpertech.Nav_Fragment.AboutXpertechFragment;
@@ -167,6 +170,10 @@ public class MainActivity extends AppCompatActivity
                 callIntent.setData(Uri.parse("tel:4458514"));
 
                 if (ContextCompat.checkSelfPermission(this.getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    SharedPreferences s = this.getSharedPreferences("values", Context.MODE_PRIVATE);
+                    String USER_SESSION = s.getString("USER_SESSION", "USER_SESSION");
+                    Task task = new Task();
+                    task.execute("stat","call", "pass", USER_SESSION);
                     startActivity(callIntent);
                 } else {
                     requestPermissions(new String[]{CALL_PHONE}, 1);

@@ -49,7 +49,6 @@ public class SignUpActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String BOX_NUMBER_SESSION;
     String USER_SESSION;
-    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
 
     boolean read = false;
     Intent intent;
@@ -95,8 +94,10 @@ public class SignUpActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {}
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+            }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
@@ -117,9 +118,10 @@ public class SignUpActivity extends AppCompatActivity {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
                 String result = "0";
 
-                if(qrcodes.size() != 0){
+                if (qrcodes.size() != 0) {
                     result = qrcodes.valueAt(0).displayValue;
                     USER_SESSION = result;
+                    BackgroundTask backgroundTask = new BackgroundTask(getApplicationContext());
                     backgroundTask.execute("login", result);
                 }
 
@@ -160,7 +162,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            
+
         }
 
         @Override
@@ -207,7 +209,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(BOX_NUMBER_SESSION != null) {
+            Log.d("BOX", BOX_NUMBER_SESSION);
+            if (BOX_NUMBER_SESSION != null) {
                 //Statistics
                 Task task = new Task();
                 task.execute("stat", "login", "pass", USER_SESSION);
@@ -220,13 +223,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                 intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
-                finish();
-            }
-            else {
+            } else {
                 Task task = new Task();
                 task.execute("stat", "login", "fail", "0");
             }
-
         }
     }
 }
