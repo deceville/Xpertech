@@ -48,10 +48,11 @@ public class Statistics_Fragment extends Fragment {
     int loginFCnt = 0;
     int callPCnt = 0;
     int callFCnt = 0;
-    int troubleshootFCnt = 0;
-    int troubleshootPCnt = 0;
+    int troublePCnt = 0;
+    int troubleFCnt = 0;
+    String stat;
     View view;
-    Statistics_Fragment.BackgroundTask task;
+    String ty;
 
 
 
@@ -94,49 +95,6 @@ public class Statistics_Fragment extends Fragment {
 
     }
 
-    void call(){
-        PieChart mChart;
-        String[] xValues = {"Pass", "Fail"};
-
-        mChart = (PieChart)view.findViewById(R.id.call_piechart);
-
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(callPCnt, 0));
-        entries.add(new Entry(callFCnt, 0));
-
-        PieDataSet dataSet =  new PieDataSet(entries, "");
-        PieData data = new PieData(xValues, dataSet);
-        dataSet.setColors(new int[]{Color.BLUE, Color.RED});
-        dataSet.setSliceSpace(5f);
-        dataSet.setValueTextSize(15f);
-        mChart.setUsePercentValues(true);
-        mChart.setDrawHoleEnabled(false);
-        mChart.setData(data);
-        mChart.invalidate();
-        task.execute("troubleshoot");
-    }
-
-    void trouble(){
-        PieChart mChart;
-        String[] xValues = {"Fixed", "Not Fixed"};
-
-        mChart = (PieChart)view.findViewById(R.id.trbl_piechart);
-
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(loginPCnt, 0));
-        entries.add(new Entry(loginFCnt, 0));
-
-        PieDataSet dataSet =  new PieDataSet(entries, "");
-        PieData data = new PieData(xValues, dataSet);
-        dataSet.setColors(new int[]{Color.BLUE, Color.RED});
-        dataSet.setSliceSpace(5f);
-        dataSet.setValueTextSize(15f);
-        mChart.setUsePercentValues(true);
-        mChart.setDrawHoleEnabled(false);
-        mChart.setData(data);
-        mChart.invalidate();
-    }
-
     void login(){
         PieChart mChart;
         String[] xValues = {"Pass", "Fail"};
@@ -156,7 +114,48 @@ public class Statistics_Fragment extends Fragment {
         mChart.setDrawHoleEnabled(false);
         mChart.setData(data);
         mChart.invalidate();
-        task.execute("call");
+    }
+    void troubleshoot(){
+        PieChart mChart;
+        String[] xValues = {"Fixed the Issue", "Issue not Solved"};
+
+        mChart = (PieChart)view.findViewById(R.id.trbl_piechart);
+
+        ArrayList<Entry> entries = new ArrayList<>();
+        entries.add(new Entry(callPCnt, 0));
+        entries.add(new Entry(callFCnt, 0));
+
+        PieDataSet dataSet =  new PieDataSet(entries, "");
+        PieData data = new PieData(xValues, dataSet);
+        dataSet.setColors(new int[]{Color.BLUE, Color.RED});
+        dataSet.setSliceSpace(5f);
+        dataSet.setValueTextSize(15f);
+        mChart.setUsePercentValues(true);
+        mChart.setDrawHoleEnabled(false);
+        mChart.setData(data);
+        mChart.invalidate();
+    }
+
+
+    void call(){
+        PieChart mChart;
+        String[] xValues = {"Main Calls", "Declined Making Calls"};
+
+        mChart = (PieChart)view.findViewById(R.id.call_piechart);
+
+        ArrayList<Entry> entries = new ArrayList<>();
+        entries.add(new Entry(callPCnt, 0));
+        entries.add(new Entry(callFCnt, 0));
+
+        PieDataSet dataSet =  new PieDataSet(entries, "");
+        PieData data = new PieData(xValues, dataSet);
+        dataSet.setColors(new int[]{Color.BLUE, Color.RED});
+        dataSet.setSliceSpace(5f);
+        dataSet.setValueTextSize(15f);
+        mChart.setUsePercentValues(true);
+        mChart.setDrawHoleEnabled(false);
+        mChart.setData(data);
+        mChart.invalidate();
     }
 
     @Override
@@ -164,8 +163,8 @@ public class Statistics_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_statistics_, container, false);
 
-        task = new Statistics_Fragment.BackgroundTask(getContext());
-        task.execute("cnt","login");
+        BackgroundTask loginPass = new BackgroundTask(getContext());
+        loginPass.execute("cnt");
 
         return view;
     }
@@ -212,6 +211,7 @@ public class Statistics_Fragment extends Fragment {
     public class BackgroundTask extends AsyncTask<String, Void, String> {
         AlertDialog alertDialog;
         Context ctx;
+        public String boxNumber = null;
 
         public BackgroundTask(Context ctx) {
             this.ctx = ctx;
@@ -225,10 +225,9 @@ public class Statistics_Fragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            String login_url = "https://uslsxpertech.000webhostapp.com/xpertech/count.php";
+            String login_url = "http://10.0.2.2/xpertech/count.php";
             String method = params[0];
-            String type = params[1];
-            if(method.equals("cnt")) {
+            if (method.equals("cnt")) {
                 try {
                     URL url = new URL(login_url);
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -238,7 +237,7 @@ public class Statistics_Fragment extends Fragment {
                     OutputStream outputStream = httpURLConnection.getOutputStream();
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                     String data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("pass", "UTF-8");
-                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("login", "UTF-8");
                     bufferedWriter.write(data);
                     bufferedWriter.flush();
                     bufferedWriter.close();
@@ -248,17 +247,7 @@ public class Statistics_Fragment extends Fragment {
                     String line = "";
                     while ((line = bufferedReader.readLine()) != null) {
                         line = line.replaceAll("\\s+", "");
-                        switch (method) {
-                            case "login":
-                                loginPCnt = Integer.parseInt(line);
-                                break;
-                            case "call":
-                                callPCnt = Integer.parseInt(line);
-                                break;
-                            case "troubleshoot":
-                                troubleshootPCnt = Integer.parseInt(line);
-                                break;
-                        }
+                        loginPCnt = Integer.parseInt(line);
                     }
                     bufferedReader.close();
                     inputStream.close();
@@ -272,7 +261,7 @@ public class Statistics_Fragment extends Fragment {
                     outputStream = httpURLConnection.getOutputStream();
                     bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                     data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("fail", "UTF-8");
-                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("login", "UTF-8");
                     bufferedWriter.write(data);
                     bufferedWriter.flush();
                     bufferedWriter.close();
@@ -281,18 +270,100 @@ public class Statistics_Fragment extends Fragment {
                     bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                     while ((line = bufferedReader.readLine()) != null) {
                         line = line.replaceAll("\\s+", "");
-                        switch (method) {
-                            case "login":
-                                loginFCnt = Integer.parseInt(line);
-                                break;
-                            case "call":
-                                callFCnt = Integer.parseInt(line);
-                                break;
-                            case "troubleshoot":
-                                troubleshootFCnt = Integer.parseInt(line);
-                                break;
+                        loginFCnt = Integer.parseInt(line);
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
 
-                        }
+
+                    url = new URL(login_url);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("pass", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("call", "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        callPCnt = Integer.parseInt(line);
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    url = new URL(login_url);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("fail", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("call", "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        callFCnt = Integer.parseInt(line);
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    url = new URL(login_url);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("pass", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("troubleshoot", "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        troublePCnt = Integer.parseInt(line);
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+                    url = new URL(login_url);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("fail", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("troubleshoot", "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        troubleFCnt = Integer.parseInt(line);
                     }
                     bufferedReader.close();
                     inputStream.close();
@@ -303,8 +374,7 @@ public class Statistics_Fragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-
-            return type;
+            return null;
         }
 
         @Override
@@ -314,17 +384,9 @@ public class Statistics_Fragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            switch (result){
-                case "login":
-                    login();
-                    break;
-                case "call":
-                    call();
-                    break;
-                case "troubleshoot":
-                    trouble();
-                    break;
-            }
+            login();
+            call();
+            troubleshoot();
         }
     }
 

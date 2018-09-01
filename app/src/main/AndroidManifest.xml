@@ -21,28 +21,28 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <!--<activity android:name=".WelcomeActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+        <!--</intent-filter>-->
         <!--</activity>-->
         <activity
             android:name=".Main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true"
-            />
-
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".Main.SignUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--<activity-->
+        <!--android:name=".MainActivity"-->
+        <!--android:label="@string/title_activity_main"-->
+        <!--android:theme="@style/AppTheme.NoActionBar" />-->
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

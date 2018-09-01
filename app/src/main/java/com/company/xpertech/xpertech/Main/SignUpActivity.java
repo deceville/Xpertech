@@ -207,31 +207,26 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            sign_up();
+            if(BOX_NUMBER_SESSION != null) {
+                //Statistics
+                Task task = new Task();
+                task.execute("stat", "login", "pass", USER_SESSION);
+
+                //Session
+                editor = sharedPref.edit();
+                editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
+                editor.putString("USER_SESSION", USER_SESSION);
+                editor.commit();
+
+                intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else {
+                Task task = new Task();
+                task.execute("stat", "login", "fail", "0");
+            }
+
         }
     }
-
-    void sign_up(){
-        if(BOX_NUMBER_SESSION != null) {
-            //Statistics
-            Task task = new Task();
-            task.execute("stat", "login", "pass", USER_SESSION);
-
-            //Session
-            editor = sharedPref.edit();
-            editor.putString("BOX_NUMBER_SESSION", BOX_NUMBER_SESSION);
-            editor.putString("USER_SESSION", USER_SESSION);
-            editor.commit();
-
-            intent = new Intent(getBaseContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        else {
-            Task task = new Task();
-            task.execute("stat", "login", "fail", "0");
-        }
-    }
-
-
 }
