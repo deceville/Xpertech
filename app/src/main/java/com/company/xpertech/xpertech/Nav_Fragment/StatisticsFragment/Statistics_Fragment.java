@@ -51,7 +51,7 @@ public class Statistics_Fragment extends Fragment {
     int troubleshootFCnt = 0;
     int troubleshootPCnt = 0;
     View view;
-    BackgroundTask task;
+    Statistics_Fragment.BackgroundTask task;
 
 
 
@@ -164,8 +164,8 @@ public class Statistics_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_statistics_, container, false);
 
-        task = new BackgroundTask(getContext());
-        task.execute("login");
+        task = new Statistics_Fragment.BackgroundTask(getContext());
+        task.execute("cnt","login");
 
         return view;
     }
@@ -227,81 +227,84 @@ public class Statistics_Fragment extends Fragment {
         protected String doInBackground(String... params) {
             String login_url = "https://uslsxpertech.000webhostapp.com/xpertech/count.php";
             String method = params[0];
-            try {
-                URL url = new URL(login_url);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("pass", "UTF-8");
-                data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(method, "UTF-8");
-                bufferedWriter.write(data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                String line = "";
-                while ((line = bufferedReader.readLine()) != null) {
-                    line = line.replaceAll("\\s+", "");
-                    switch (method){
-                        case "login":
-                            loginPCnt = Integer.parseInt(line);
-                            break;
-                        case "call":
-                            callPCnt = Integer.parseInt(line);
-                            break;
-                        case "troubleshoot":
-                            troubleshootPCnt = Integer.parseInt(line);
-                            break;
+            String type = params[1];
+            if(method.equals("cnt")) {
+                try {
+                    URL url = new URL(login_url);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("pass", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    String line = "";
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        switch (method) {
+                            case "login":
+                                loginPCnt = Integer.parseInt(line);
+                                break;
+                            case "call":
+                                callPCnt = Integer.parseInt(line);
+                                break;
+                            case "troubleshoot":
+                                troubleshootPCnt = Integer.parseInt(line);
+                                break;
+                        }
                     }
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
 
-                url = new URL(login_url);
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                outputStream = httpURLConnection.getOutputStream();
-                bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("fail", "UTF-8");
-                data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(method, "UTF-8");
-                bufferedWriter.write(data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-                inputStream = httpURLConnection.getInputStream();
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                while ((line = bufferedReader.readLine()) != null) {
-                    line = line.replaceAll("\\s+", "");
-                    switch (method){
-                        case "login":
-                            loginFCnt = Integer.parseInt(line);
-                            break;
-                        case "call":
-                            callFCnt = Integer.parseInt(line);
-                            break;
-                        case "troubleshoot":
-                            troubleshootFCnt = Integer.parseInt(line);
-                            break;
+                    url = new URL(login_url);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    data = URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode("fail", "UTF-8");
+                    data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    while ((line = bufferedReader.readLine()) != null) {
+                        line = line.replaceAll("\\s+", "");
+                        switch (method) {
+                            case "login":
+                                loginFCnt = Integer.parseInt(line);
+                                break;
+                            case "call":
+                                callFCnt = Integer.parseInt(line);
+                                break;
+                            case "troubleshoot":
+                                troubleshootFCnt = Integer.parseInt(line);
+                                break;
 
+                        }
                     }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
-            return method;
+            return type;
         }
 
         @Override

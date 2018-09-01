@@ -79,17 +79,13 @@ public class TroubleshootFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
-        //s = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
-        BUNDLE_SESSION = getArguments();
-        //BOX_NUMBER_SESSION = BUNDLE_SESSION.getString("BOX_NUMBER_SESSION");
+
         String method = "troubleshoot";
-        TroubleeshootItemFragment tif = new TroubleeshootItemFragment();
 
         Log.d("BOX_NUMBER_SESSION",BOX_NUMBER_SESSION);
         MenuTask menuTask = new MenuTask(getContext());
         menuTask.execute(method, BOX_NUMBER_SESSION);
-//        menuTask.execute(method, "1001");
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);

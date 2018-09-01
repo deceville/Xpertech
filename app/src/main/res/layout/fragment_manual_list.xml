@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.company.xpertech.xpertech.Nav_Fragment.Manual_Fragment.ManualListFragment">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/manual_list"></ListView>
+   <com.github.barteksc.pdfviewer.PDFView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/pdfView">
+   </com.github.barteksc.pdfviewer.PDFView>
 
 </FrameLayout>

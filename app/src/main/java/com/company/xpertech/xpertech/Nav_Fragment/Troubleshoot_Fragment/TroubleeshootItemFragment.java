@@ -60,6 +60,7 @@ public class TroubleeshootItemFragment extends Fragment {
     private static String data = null;
     private static int position = 0;
     static ArrayList<Troubleshoot> troubleshootArrayList= new ArrayList<Troubleshoot>();
+    static ArrayList<String> images = new ArrayList<String>();
     int cnt = 0;
     Context ctx;
     View view;
@@ -117,18 +118,11 @@ public class TroubleeshootItemFragment extends Fragment {
     public void next(final int index){
         TextView txt = (TextView) this.view.findViewById(R.id.item_text);
         Troubleshoot troubleshoot = troubleshootArrayList.get(index);
-        int img = 0;
-        if (position == 2){
-            img = R.drawable.remote;
-        }else if (position == 3){
-            img = R.drawable.greenled;
-        }else if (position == 4){
-            img = (R.drawable.audiovideo);
-        }else if (position == 5){
-            img = (R.drawable.coxial);
+        if(troubleshoot.getImg() != "0") {
+            int imgInt = getResources().getIdentifier(troubleshoot.getImg().replaceAll("\\s+", ""), "drawable", ctx.getPackageName());
+            Log.d("IMG",""+imgInt);
+            gif.setImageResource(imgInt);
         }
-        Log.d("IMG",""+img);
-        gif.setImageResource(img);
         txt.setText(troubleshoot.getInstruct());
     }
 
@@ -285,8 +279,7 @@ public class TroubleeshootItemFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             String install_url = "https://uslsxpertech.000webhostapp.com/xpertech/troubleshoot_steps.php";
-            String title_url = "https://uslsxpertech.000webhostapp.com/xpertech/selfinstall_title.php";
-            String img_url = "https://uslsxpertech.000webhostapp.com/xpertech/selfinstall_image.php";
+            String image_url = "https://uslsxpertech.000webhostapp.com/xpertech/troubleshoot_image.php";
             String method = params[0];
             if(method.equals("troubleshoot_steps")){
                 String troubleshoot_id = params[1];
@@ -308,12 +301,38 @@ public class TroubleeshootItemFragment extends Fragment {
                     outputStream.close();
                     InputStream inputStream = httpURLConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String line = "";
-                    line = bufferedReader.readLine();
+                    String step_line = "";
+                    step_line = bufferedReader.readLine();
 
-                    String[] step = line.split("\\$");
-                    for (int i = 0; i < step.length; i++) {
-                        TroubleeshootItemFragment.troubleshootArrayList.add(new Troubleshoot(step[i],0));
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
+
+                    //Retrieve Images
+                    url = new URL(image_url);
+                    httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    outputStream = httpURLConnection.getOutputStream();
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                    data = URLEncoder.encode("troubleshoot_id","UTF-8")+"="+URLEncoder.encode(troubleshoot_id,"UTF-8");
+                    data += "&" + URLEncoder.encode("box_id","UTF-8")+"="+URLEncoder.encode(box_id,"UTF-8");
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    inputStream = httpURLConnection.getInputStream();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String img_line = "";
+                    img_line = bufferedReader.readLine();
+
+                    //Save Data to list
+                    String[] step_list = step_line.split("\\$");
+                    String[] img_list = img_line.split("\\s");
+                    for (int i = 0; i < step_list.length; i++) {
+                        TroubleeshootItemFragment.troubleshootArrayList.add(new Troubleshoot(step_list[i], img_list[i]));
                     }
 
                     bufferedReader.close();

@@ -6,7 +6,7 @@
 
     <pl.droidsodroids.gif.GifImageView
         android:scaleType="centerCrop"
-        android:src="@drawable/greenled"
+        android:src="@drawable/gif_greenled"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:id="@+id/troubleshoot_item_image"/>

@@ -6,9 +6,9 @@ package com.company.xpertech.xpertech.Nav_Fragment.Troubleshoot_Fragment;
 
 public class Troubleshoot {
     private String instruct;
-    private int img;
+    private String img;
 
-    public Troubleshoot(String instruct, int img) {
+    public Troubleshoot(String instruct, String img) {
         this.instruct = instruct;
         this.img = img;
     }
@@ -21,11 +21,11 @@ public class Troubleshoot {
         this.instruct = instruct;
     }
 
-    public int getImg() {
+    public String getImg() {
         return img;
     }
 
-    public void setImg(int img) {
+    public void setImg(String img) {
         this.img = img;
     }
 }

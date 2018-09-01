@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.company.xpertech.xpertech.R;
+import com.github.barteksc.pdfviewer.PDFView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -94,11 +95,20 @@ public class ManualListFragment extends Fragment {
 
         SharedPreferences s = this.getActivity().getSharedPreferences("values", Context.MODE_PRIVATE);
         String BOX_NUMBER_SESSION = s.getString("BOX_NUMBER_SESSION", "BOX_NUMBER_SESSION");
-        ManualListFragment.MenuTask menuTask = new ManualListFragment.MenuTask(getContext());
-        menuTask.execute("usermanual", BOX_NUMBER_SESSION);
 
-//        items = new String[]{"1.0 Introduction", "2.0 Your Receiver", "3.0 Connection", "4.0 Starting Up For The First Time",
-//                "5.0 Quick Guide To Using Your Receiver", "6.0 Operation", "7.0 Main Menu", ""};
+        PDFView pdfView = (PDFView) view.findViewById(R.id.pdfView);
+        //pdfView.fromAsset("1001.pdf").load();
+        switch (BOX_NUMBER_SESSION){
+            case "1001":
+                pdfView.fromAsset("1001.pdf").load();
+                break;
+            case "1002":
+                pdfView.fromAsset("1002.pdf").load();
+                break;
+            case "1003":
+                pdfView.fromAsset("1003.pdf").load();
+                break;
+        }
         return view;
     }
 
@@ -109,31 +119,6 @@ public class ManualListFragment extends Fragment {
         }
     }
 
-    void display(){
-        listView = (ListView) view.findViewById(R.id.manual_list);
-
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                items
-        );
-
-        listView.setAdapter(listViewAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ft = (FragmentActivity) ctx;
-                Bundle bundle = new Bundle();
-                bundle.putInt("position",position);
-                Sub_Manual_Fragment smf = new Sub_Manual_Fragment();
-                smf.setArguments(bundle);
-
-                ft.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, smf).addToBackStack("tag").commit();
-            }
-        });
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -166,69 +151,5 @@ public class ManualListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public class MenuTask extends AsyncTask<String,Void,String> {
-        Context ctx;
-        AlertDialog alertDialog;
-
-        public MenuTask(Context ctx)
-        {
-            this.ctx =ctx;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            alertDialog = new AlertDialog.Builder(ctx).create();
-            alertDialog.setTitle("");
-        }
-        @Override
-        protected String doInBackground(String... params) {
-            String manual_url = "https://uslsxpertech.000webhostapp.com/xpertech/usermanual.php";
-            String method = params[0];
-            if(method.equals("usermanual")){
-                String box_number = params[1];
-                try {
-                    URL url = new URL(manual_url);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                    String data = URLEncoder.encode("box_number","UTF-8")+"="+URLEncoder.encode(box_number,"UTF-8");
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    outputStream.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                    String response = "";
-                    String line = "";
-                    line = bufferedReader.readLine();
-                    String[] title = line.split("\\$");
-                    items = new String[title.length];
-                    items = title;
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return response;
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            display();
-        }
     }
 }
